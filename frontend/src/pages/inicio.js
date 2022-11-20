@@ -1,5 +1,5 @@
 import * as React from "react";
-// import {useNavigate} from "react-router-dom"
+import {useNavigate} from "react-router-dom"
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -10,6 +10,8 @@ import ImagenGasolinera from '../imagenes/gasolinera.jpg'
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from "@emotion/react";
 import Footer from "../layouts/Footer"
+
+import MainDashboard from './mainDashboard'
 
 
 const styles ={
@@ -39,6 +41,9 @@ const theme = createTheme({
 
 
 export default function Inicio() {
+    
+    let navigate = useNavigate();
+
     return (
     <Paper style={styles.paperContainer}>
       <Box
@@ -49,7 +54,7 @@ export default function Inicio() {
         }}
       >
         <CssBaseline />
-        <Container component="main" sx={{ mt: 8, mb: 2 }} maxWidth="sm">
+        <Container component="main" sx={{ mt: 10, mb: 2 }} maxWidth="sm">
           <ThemeProvider theme={theme}>
             <Typography variant="titulo">
                 Gasolineras
@@ -60,9 +65,18 @@ export default function Inicio() {
             {'Tramiento de datos de gasolineras a nivel Nacional.'}
             </Typography>
           </ThemeProvider>
-          <Button>
-            Comencemos
-          </Button>
+            <Button 
+              style={{
+                backgroundColor: "white",
+                color: "black",
+                borderRadius: 20,
+              }}
+              onClick={(e) =>(
+                 navigate("/MainDashboard")
+             )}
+              variant="contained">
+              Comencemos
+            </Button>
         </Container>
         <Footer />
           

@@ -10,3 +10,4 @@ RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash
 RUN apt-get install -y nodejs
 RUN npm install -g create-react-app
 RUN apt install git -y
+
