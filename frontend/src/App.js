@@ -3,7 +3,7 @@
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Inicio from "./pages/inicio"
-import MainDashboard from "./pages/mainDashboard";
+import MainDashboardDiario from "./pages/mainDashboardDiario";
 
 
 
@@ -38,7 +38,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Inicio />}/>
-        <Route path="/mainDashboard" element={<MainDashboard />}/>
+        <Route path="/mainDashboardDiario" element={<MainDashboardDiario />}/>
       </Routes>
     </BrowserRouter>
   );
