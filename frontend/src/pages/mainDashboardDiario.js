@@ -58,13 +58,13 @@ export default function mainDashboardDiario() {
       <Header />
 
         <LineChart
-          width={900}
+          width={1350}
           height={600}
           data={data}
           margin={{
-            top: 40,
-            right: 30,
-            left: 20,
+            top: 70,
+            right: 0,
+            left: 100,
             bottom: 5,
           }}
         >
