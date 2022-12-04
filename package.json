@@ -4,10 +4,17 @@
     "@material-ui/icons": "^4.11.3",
     "@material-ui/lab": "^4.0.0-alpha.61",
     "devextreme": "22.1.6",
+    "google-map-react": "^2.2.0",
+    "leaflet": "^1.9.3",
     "material-ui-icons": "^1.0.0-beta.36",
     "mysql": "^2.18.1",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "react-google-maps": "^9.4.5",
+    "react-leaflet-universal": "^2.2.1",
     "recharts": "^2.1.16",
     "sequelize": "^6.25.7",
+    "simple-react-google-maps": "^1.1.2",
     "tedious": "^15.1.2"
   }
 }

@@ -4,6 +4,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Inicio from "./pages/inicio"
 import MainDashboardDiario from "./pages/mainDashboardDiario";
+import Mapa from "./pages/mapa"
 
 
 
@@ -39,6 +40,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Inicio />}/>
         <Route path="/mainDashboardDiario" element={<MainDashboardDiario />}/>
+        <Route path="/mapa" element={<Mapa />}/>
+
       </Routes>
     </BrowserRouter>
   );

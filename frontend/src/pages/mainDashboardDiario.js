@@ -56,26 +56,25 @@ export default function mainDashboardDiario() {
   return (
     <>
       <Header />
-
-        <LineChart
-          width={1350}
-          height={600}
-          data={data}
-          margin={{
-            top: 70,
-            right: 0,
-            left: 100,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }} />
-          <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-        </LineChart>
+      <LineChart
+        width={1350}
+        height={600}
+        data={data}
+        margin={{
+          top: 70,
+          right: 0,
+          left: 100,
+          bottom: 5,
+        }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }} />
+        <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+      </LineChart>
       <Footer />
     </>
   );
