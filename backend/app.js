@@ -1,6 +1,7 @@
 import express from 'express'
 import sequelize from './config/databaseConection.js'
 import dbRoute from './routes/ddbb.route.js'
+import mapaRoute from './routes/mapa.route.js'
 
 try {
   await sequelize.authenticate()
@@ -12,6 +13,7 @@ try {
 var app = express();
 
 app.use('/ddbb', dbRoute)
+app.use('/mapa', mapaRoute)
 
 app.listen(3002, function () {
   console.log('Example app listening on port 3002!');

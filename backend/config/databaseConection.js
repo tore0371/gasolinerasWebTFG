@@ -3,7 +3,7 @@ import Sequelize from 'sequelize'
 
 const sequelize = new Sequelize('gasolineras', 'sa', 'yourStrong(!)Password', {
     dialect: 'mssql',
-    host: '172.17.0.3',
+    host: '172.17.0.4',
     dialectOptions: {
         options: { "requestTimeout": 600000 }
       },

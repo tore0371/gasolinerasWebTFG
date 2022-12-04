@@ -9,7 +9,7 @@ import { Icon } from 'leaflet'
 
 export default () => {
 
-
+const markers = [[40.4165, -3.70256], [40.4165, -4.00256], [40.4165, -4.30256]]
     return (
         <>
             <Header />
@@ -18,11 +18,14 @@ export default () => {
                     attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <Marker position={[40.4165, -3.70256]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41] })} >
-                    <Popup>
-                        Madrid
-                    </Popup>
-                </Marker>
+                {markers.map((position, index) => (
+                    <Marker position={[position[0], position[1]]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41] })} >
+                        <Popup>
+                            Gasolinera: {index}
+                        </Popup>
+                    </Marker>
+                ))}
+                    
             </Map>
             <Footer />
         </>
