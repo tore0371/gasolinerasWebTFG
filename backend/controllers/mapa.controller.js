@@ -11,8 +11,8 @@ const getTodayData = async(req, res) => {
         const date = new Date();
         let todayMonth = date.getMonth() +1
         // fecha de hoy
-        let strDay = (todayMonth < 10) ? "0"+todayMonth.toString() : todayMonth.toString()
-        let strMonth = (date.getMonth() < 10) ? "0"+date.getMonth().toString() : date.getMonth().toString()
+        let strMonth = (todayMonth < 10) ? "0"+todayMonth.toString() : todayMonth.toString()
+        let strDay = (date.getDate() < 10) ? "0"+date.getDate().toString() : date.getDate().toString()
         let strYear = date.getFullYear().toString()
         let todayDate = strYear + strMonth + strDay
 
