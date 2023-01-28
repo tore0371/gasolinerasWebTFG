@@ -36,7 +36,13 @@ const getMeanProvinceValues = async function (provincia) {
             from GASOLINERAS gas, DATA_GASOLINERAS dat \
             where gas.PROVINCIA = '" + provincia[0] + "' and gas.ID_GASOLINERA = dat.ID_GASOLINERA"
     );
-    return([provincia[0], provincia[1], provincia[2], gasolinerasData[0][0]["gasoleoA"], gasolinerasData[0][0]["gasoleoPremium"], gasolinerasData[0][0]["gasoleoB"], gasolinerasData[0][0]["gasolina95_E5"], gasolinerasData[0][0]["gasolina98_E5"]])
+    var gasoleoA = gasolinerasData[0][0]["gasoleoA"] != null ? gasolinerasData[0][0]["gasoleoA"] : 0
+    var gasoleoPremium = gasolinerasData[0][0]["gasoleoPremium"] != null ? gasolinerasData[0][0]["gasoleoPremium"] : 0
+    var gasoleoB = gasolinerasData[0][0]["gasoleoB"] != null ? gasolinerasData[0][0]["gasoleoB"] : 0
+    var gasolina95 = gasolinerasData[0][0]["gasolina95_E5"] != null ? gasolinerasData[0][0]["gasolina95_E5"] : 0
+    var gasolina98 = gasolinerasData[0][0]["gasolina98_E5"] != null ? gasolinerasData[0][0]["gasolina98_E5"] : 0
+
+    return([provincia[0], provincia[1], provincia[2], gasoleoA, gasoleoPremium, gasoleoB, gasolina95, gasolina98])
 }
 
 

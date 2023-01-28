@@ -14,6 +14,7 @@ export default function Mapa () {
 
     const [actualizado, setActualizado] = useState(true);
     const [provincias, setProvincias] = useState([])
+    // gasolinerasData[0][0]["gasoleoA"], gasolinerasData[0][0]["gasoleoPremium"], gasolinerasData[0][0]["gasoleoB"], gasolinerasData[0][0]["gasolina95_E5"], gasolinerasData[0][0]["gasolina98_E5"]])
 
 
     useEffect(() => {
@@ -43,7 +44,12 @@ export default function Mapa () {
                 {provincias.map((position, index) => (
                         <Marker position={[parseFloat(position[1]), parseFloat(position[2])]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41] })} >
                             <Popup>
-                                Gasolinera: {position[0]}
+                                Provincia: {position[0]}<br/>
+                                Gasoleo A: {position[3].toFixed(2)} €/L<br/>
+                                Gasoleo Premium: {position[4].toFixed(2)} €/L<br/>
+                                Gasoleo B: {position[5].toFixed(2)} €/L<br/>
+                                Gasolina 95: {position[6].toFixed(2)} €/L<br/>
+                                Gasolina 98: {position[7].toFixed(2)} €/L<br/>
                             </Popup>
                         </Marker>
                 ))}
