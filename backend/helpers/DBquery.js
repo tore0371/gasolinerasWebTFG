@@ -16,9 +16,27 @@ const getTodayData = async function (todayDate, tomorrowDate) {
         "SELECT GASOLINERAS.ID_GASOLINERA,GASOLINERAS.LATITUD, GASOLINERAS.LONGITUD, DATA_GASOLINERAS.FECHA, DATA_GASOLINERAS.PRECIO_GASOLEO_B \
         FROM GASOLINERAS \
         INNER JOIN DATA_GASOLINERAS ON GASOLINERAS.ID_GASOLINERA = DATA_GASOLINERAS.ID_GASOLINERA \
-        WHERE DATA_GASOLINERAS.FECHA >= '" +todayDate+"' AND DATA_GASOLINERAS.FECHA <'"+tomorrowDate+"'"
+        WHERE DATA_GASOLINERAS.FECHA >= '" + todayDate + "' AND DATA_GASOLINERAS.FECHA <'" + tomorrowDate + "'"
     );
     return gasolinerasData
+}
+
+
+// consulta precio medio por provincia
+// select AVG(dat.PRECIO_GASOLEO_B)
+// from GASOLINERAS gas, DATA_GASOLINERAS dat
+// where gas.PROVINCIA = 'CASTELLÓN / CASTELLÓ' and gas.ID_GASOLINERA = dat.ID_GASOLINERA
+
+
+const getMeanProvinceValues = async function (provincia) {
+    //results = [[procincia, latitud, longitud, gasoleoA, gasoleoPremium, gasoleoB, gasolina95, gasolina98 ]]
+    console.log("hoal")
+    var gasolinerasData = await sequelize.query(
+        "select AVG(dat.PRECIO_GASOLEO_A) as gasoleoA, AVG(dat.PRECIO_GASOLEO_PREMIUM) as gasoleoPremium, AVG(dat.PRECIO_GASOLEO_B) as gasoleoB, AVG(dat.PRECIO_GASOLINA_95_E5) as gasolina95_E5, AVG(dat.PRECIO_GASOLINA_98_E5) as gasolina98_E5\
+            from GASOLINERAS gas, DATA_GASOLINERAS dat \
+            where gas.PROVINCIA = '" + provincia[0] + "' and gas.ID_GASOLINERA = dat.ID_GASOLINERA"
+    );
+    return([provincia[0], provincia[1], provincia[2], gasolinerasData[0][0]["gasoleoA"], gasolinerasData[0][0]["gasoleoPremium"], gasolinerasData[0][0]["gasoleoB"], gasolinerasData[0][0]["gasolina95_E5"], gasolinerasData[0][0]["gasolina98_E5"]])
 }
 
 
@@ -42,5 +60,7 @@ const getTodayData = async function (todayDate, tomorrowDate) {
 
 export {
     getAllGasolineras,
-    getTodayData
+    getTodayData,
+    getMeanProvinceValues
+
 }
