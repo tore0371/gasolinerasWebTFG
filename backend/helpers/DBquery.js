@@ -21,16 +21,8 @@ const getTodayData = async function (todayDate, tomorrowDate) {
     return gasolinerasData
 }
 
-
-// consulta precio medio por provincia
-// select AVG(dat.PRECIO_GASOLEO_B)
-// from GASOLINERAS gas, DATA_GASOLINERAS dat
-// where gas.PROVINCIA = 'CASTELLÓN / CASTELLÓ' and gas.ID_GASOLINERA = dat.ID_GASOLINERA
-
-
 const getMeanProvinceValues = async function (provincia) {
     //results = [[procincia, latitud, longitud, gasoleoA, gasoleoPremium, gasoleoB, gasolina95, gasolina98 ]]
-    console.log("hoal")
     var gasolinerasData = await sequelize.query(
         "select AVG(dat.PRECIO_GASOLEO_A) as gasoleoA, AVG(dat.PRECIO_GASOLEO_PREMIUM) as gasoleoPremium, AVG(dat.PRECIO_GASOLEO_B) as gasoleoB, AVG(dat.PRECIO_GASOLINA_95_E5) as gasolina95_E5, AVG(dat.PRECIO_GASOLINA_98_E5) as gasolina98_E5\
             from GASOLINERAS gas, DATA_GASOLINERAS dat \
@@ -45,23 +37,6 @@ const getMeanProvinceValues = async function (provincia) {
     return([provincia[0], provincia[1], provincia[2], gasoleoA, gasoleoPremium, gasoleoB, gasolina95, gasolina98])
 }
 
-
-
-
-
-
-
-
-// EJEMPLO DE COMO  HACER LA QUERY A MANO 
-
-
-// const getAllGasolineras = async function(){
-//     console.log("db")
-//     var gasolinerasData = await sequelize.query(
-//         "SELECT * FROM GASOLINERAS"
-//     );
-//     return gasolinerasData
-// }
 
 
 export {
