@@ -65,7 +65,7 @@ export default function Inicio() {
               color: "black",
               borderRadius: 20,
             }}
-            onClick={(e) => navigate("/MainDashboardDiario")}
+            onClick={(e) => navigate("/diario")}
             variant="contained"
           >
             Comencemos

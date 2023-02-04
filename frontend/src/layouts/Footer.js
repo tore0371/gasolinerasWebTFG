@@ -12,7 +12,7 @@ export default function Footer() {
         px: 2,
         mt: "auto",
         backgroundColor: (theme) => theme.palette.grey[200],
-        position: 'fixed',
+        position: 'relative',
         bottom: 0,
         width: '100%'   
       }}
