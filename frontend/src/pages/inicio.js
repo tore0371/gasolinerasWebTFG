@@ -10,6 +10,7 @@ import ImagenGasolinera from "../imagenes/gasolinera.jpg";
 import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "@emotion/react";
 import Footer from "../layouts/Footer";
+import Header from "../layouts/Header"
 
 
 const styles = {
@@ -41,38 +42,45 @@ export default function Inicio() {
   let navigate = useNavigate();
 
   return (
-    <Paper style={styles.paperContainer}>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          minHeight: "100vh",
-        }}
-      >
-        <CssBaseline />
-        <Container component="main" sx={{ mt: 10, mb: 2 }} maxWidth="sm">
-          <ThemeProvider theme={theme}>
-            <Typography variant="titulo">Gasolineras</Typography>
-          </ThemeProvider>
-          <ThemeProvider theme={theme}>
-            <Typography variant="texto" component="h2" gutterBottom>
-              {"Tramiento de datos de gasolineras a nivel Nacional."}
-            </Typography>
-          </ThemeProvider>
-          <Button
-            style={{
-              backgroundColor: "white",
-              color: "black",
-              borderRadius: 20,
-            }}
-            onClick={(e) => navigate("/diario")}
-            variant="contained"
-          >
-            Comencemos
-          </Button>
-        </Container>
+    <Box>
+      <Paper style={styles.paperContainer}>
+
+      <Header />
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            minHeight: "100vh",
+          }}
+        >
+          <CssBaseline />
+          <Container component="main" sx={{ mt: 10, mb: 2 }} maxWidth="sm">
+            <ThemeProvider theme={theme}>
+              <Typography variant="titulo">Gasolineras</Typography>
+            </ThemeProvider>
+            <ThemeProvider theme={theme}>
+              <Typography variant="texto" component="h2" gutterBottom>
+                {"Tramiento de datos de gasolineras a nivel Nacional."}
+              </Typography>
+            </ThemeProvider>
+            <Button
+              style={{
+                backgroundColor: "white",
+                color: "black",
+                borderRadius: 20,
+              }}
+              onClick={(e) => navigate("/diario")}
+              variant="contained"
+            >
+              Comencemos
+            </Button>
+          </Container>
+          
+        </Box>
+      </Paper>
+      <Box sx={{ marginBottom: "60px", position: "relative" }}>
         <Footer />
       </Box>
-    </Paper>
+    </Box>
   );
 }

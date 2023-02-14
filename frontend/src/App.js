@@ -4,6 +4,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Inicio from "./pages/inicio"
 import Diario from "./pages/diario";
+import Semanal from "./pages/semanal";
+import Mensual from "./pages/mensual";
+
+
 import Mapa from "./pages/mapa"
 
 
@@ -39,9 +43,11 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Inicio />}/>
+        <Route path="/inicio" element={<Inicio />}/>
         <Route path="/diario" element={<Diario />}/>
         <Route path="/mapa" element={<Mapa />}/>
-
+        <Route path="/semanal" element={<Semanal/>}/>
+        <Route path="/mensual" element={<Mensual/>}/>
       </Routes>
     </BrowserRouter>
   );

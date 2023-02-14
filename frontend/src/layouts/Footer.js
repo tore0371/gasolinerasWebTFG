@@ -10,11 +10,11 @@ export default function Footer() {
       sx={{
         py: 2,
         px: 2,
-        mt: "auto",
         backgroundColor: (theme) => theme.palette.grey[200],
-        position: 'relative',
+        position: 'fixed',
         bottom: 0,
-        width: '100%'   
+        width: '100%',
+        height: "2.5%"
       }}
     >
       <Container maxWidth="sm">

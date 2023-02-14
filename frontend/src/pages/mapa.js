@@ -7,7 +7,10 @@ import markerIconPng from "leaflet/dist/images/marker-icon.png"
 import { Icon } from 'leaflet'
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import axios from "axios";
+import Box from '@mui/material/Box';
+
 import { useEffect, useState } from "react";
+import { Container } from "@mui/material";
 
 
 export default function Mapa () {
@@ -34,7 +37,7 @@ export default function Mapa () {
     const markers = [[40.4165, -3.70256], [40.4165, -4.00256], [40.4165, -4.30256]]
     console.log(provincias)
     return (
-        <>
+        <div style = {{height:"100vh"}}>
             <Header />
             <Map center={[40.4165, -3.70256]} zoom={6} style={{ height: "85vh" }}>
                 <TileLayer
@@ -56,6 +59,6 @@ export default function Mapa () {
 
             </Map>
             <Footer />
-        </>
+            </div>
     );
 };
