@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { Container } from "@mui/material";
 
 
-export default function Mapa () {
+export default function Mapa() {
 
     const [actualizado, setActualizado] = useState(true);
     const [provincias, setProvincias] = useState([])
@@ -22,43 +22,45 @@ export default function Mapa () {
 
     useEffect(() => {
         axios
-          .get("http://localhost:3001/mapa/getTodayMeanDataPerProvince", {
-          })
-          .then((res) => {
-            console.log("Entre")
-            setProvincias(res.data)
+            .get("http://localhost:3001/mapa/getTodayMeanDataPerProvince", {
+            })
+            .then((res) => {
+                console.log("Entre")
+                setProvincias(res.data)
 
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }, [actualizado]);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, [actualizado]);
 
-    const markers = [[40.4165, -3.70256], [40.4165, -4.00256], [40.4165, -4.30256]]
     console.log(provincias)
+    function handleClick(e){
+        console.log(e.latlng );
+    }
     return (
-        <div style = {{height:"100vh"}}>
+        <Container disableGutters sx={{ minWidth: "100%" }}>
             <Header />
-            <Map center={[40.4165, -3.70256]} zoom={6} style={{ height: "85vh" }}>
+            <Map center={[40.4165, -3.70256]} zoom={6} style={{ height: "85vh" }} onClick={handleClick}>
                 <TileLayer
                     attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 {provincias.map((position, index) => (
-                        <Marker position={[parseFloat(position[1]), parseFloat(position[2])]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41] })} >
-                            <Popup>
-                                Provincia: {position[0]}<br/>
-                                Gasoleo A: {position[3].toFixed(2)} €/L<br/>
-                                Gasoleo Premium: {position[4].toFixed(2)} €/L<br/>
-                                Gasoleo B: {position[5].toFixed(2)} €/L<br/>
-                                Gasolina 95: {position[6].toFixed(2)} €/L<br/>
-                                Gasolina 98: {position[7].toFixed(2)} €/L<br/>
-                            </Popup>
-                        </Marker>
+                    <Marker position={[parseFloat(position[1]), parseFloat(position[2])]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41] })} >
+                        <Popup>
+                            Provincia: {position[0]}<br />
+                            Gasoleo A: {position[3].toFixed(3)} €/L<br />
+                            Gasoleo Premium: {position[4].toFixed(3)} €/L<br />
+                            Gasoleo B: {position[5].toFixed(3)} €/L<br />
+                            Gasolina 95: {position[6].toFixed(3)} €/L<br />
+                            Gasolina 98: {position[7].toFixed(3)} €/L<br />
+                        </Popup>
+                    </Marker>
                 ))}
 
             </Map>
             <Footer />
-            </div>
+        </Container>
     );
 };

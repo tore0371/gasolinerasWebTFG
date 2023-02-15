@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 
 
-const pages = ['Inicio', 'Diario', 'Semanal', 'Mensual', 'Mapa', 'Previsiones'];
+const pages = ['Inicio', 'Graficas', 'Mapa', 'Previsiones', 'Resaltados', 'Actual'];
 
 function ResponsiveAppBar() {
   let navigate = useNavigate();
@@ -40,7 +40,7 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="sticky">
           <Container maxWidth="xxl" style={{ marginLeft: "0%" }}>
           <Toolbar disableGutters xs={{width:"100%"}}>
           

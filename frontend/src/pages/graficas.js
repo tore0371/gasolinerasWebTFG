@@ -8,6 +8,8 @@ import { Bar } from 'react-chartjs-2'
 import { Chart as ChartJS } from 'chart.js/auto'
 import { Chart } from 'react-chartjs-2'
 import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+
 
 export default function Diario() {
   const data = {
@@ -42,7 +44,8 @@ export default function Diario() {
   }
 
   return (
-    <Box>
+    <Container disableGutters sx={{minWidth:"100%", height:"100%"}}>
+
       <Header />
       <Box>Provincia dia rangoDePrecios </Box>
 
@@ -58,8 +61,7 @@ export default function Diario() {
       <Box sx={{ marginTop: "60px", position: "relative" }}>
         <Footer />
       </Box>
-
-    </Box>
+      </Container>
 
   );
 };

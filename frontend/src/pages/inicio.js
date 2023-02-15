@@ -45,12 +45,12 @@ export default function Inicio() {
     <Box>
       <Paper style={styles.paperContainer}>
 
-      <Header />
+        <Header />
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
-            minHeight: "100vh",
+            minHeight: "86vh",
           }}
         >
           <CssBaseline />
@@ -75,12 +75,10 @@ export default function Inicio() {
               Comencemos
             </Button>
           </Container>
-          
+
         </Box>
       </Paper>
-      <Box sx={{ marginBottom: "60px", position: "relative" }}>
-        <Footer />
-      </Box>
+      <Footer />
     </Box>
   );
 }

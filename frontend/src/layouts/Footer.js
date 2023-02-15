@@ -1,28 +1,17 @@
-import * as React from "react";
-import Container from "@mui/material/Container";
+import React from 'react'
+import Footer from '../components/footer'
 import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
+import { Box } from '@mui/material';
 
-export default function Footer() {
+export default function FooterContainer() {
   return (
-    <Box
-      component="footer"
-      sx={{
-        py: 2,
-        px: 2,
-        backgroundColor: (theme) => theme.palette.grey[200],
-        position: 'fixed',
-        bottom: 0,
-        width: '100%',
-        height: "2.5%"
-      }}
-    >
-      <Container maxWidth="sm">
-        <Typography variant="caption">
+    <Footer>
+      <Box display="flex" justifyContent="center">
+        <Typography variant="caption" align="center">
           TFG realizado por Salvador Rodriguez Abad y tutorizado por Francisco
           Favier Fodríguez Lera.
         </Typography>
-      </Container>
-    </Box>
-  );
+      </Box>
+    </Footer>
+  )
 }
