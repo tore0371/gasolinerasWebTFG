@@ -92,18 +92,10 @@ const getTodayData = async (req, res) => {
 const getTodayMeanDataPerProvince = async (req, res) => {
     console.log("hola he llegado a esta zona de aqui a ver quie pasa")
     var results = []
-
-
-
     for (var i = 0; i < 52; i++) {        
         const data = await ddbb.getMeanProvinceValues(provincias[i]) 
         results.push(data)
     }
-
-    // provincias.forEach(async provincia => {
-    //     v
-    // });
-
     res.send(results)
 }
 

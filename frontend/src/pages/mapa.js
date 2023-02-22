@@ -22,7 +22,7 @@ export default function Mapa() {
 
     useEffect(() => {
         axios
-            .get("http://localhost:3001/mapa/getTodayMeanDataPerProvince", {
+            .get("http://localhost:3002/mapa/getTodayMeanDataPerProvince", {
             })
             .then((res) => {
                 console.log("Entre")

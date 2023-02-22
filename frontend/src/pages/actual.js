@@ -1,70 +1,74 @@
-import React, { useMemo, useRef, useState, useEffect } from 'react';
-import MaterialReactTable from 'material-react-table';
-import { Container } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { AgGridReact } from 'ag-grid-react';
+import TextField from '@mui/material/TextField';
+import SearchIcon from '@mui/icons-material/Search';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
 import Header from "../layouts/Header"
 import Footer from "../layouts/Footer"
+import { Box } from '@mui/material';
 
 
-const data = [
-    {
-        name: 'John',
-        age: 30,
-    },
-    {
-        name: 'Sara',
-        age: 25,
-    },
-]
-
-export default function App() {
-    const columns = useMemo(
-        () => [
-            {
-                accessorKey: 'name', //simple recommended way to define a column
-                header: 'Name',
-                muiTableHeadCellProps: { sx: { color: 'green' } }, //optional custom props
-                Cell: ({ cell }) => <span>{cell.getValue()}</span>, //optional custom cell render
-            },
-            {
-                accessorFn: (row) => row.age, //alternate way
-                id: 'age', //id required if you use accessorFn instead of accessorKey
-                header: 'Age',
-                Header: () => <i>Age</i>, //optional custom header render
-            },
-        ],
-        [],
-    );
-
-    //optionally, you can manage any/all of the table state yourself
-    const [rowSelection, setRowSelection] = useState({});
+const App = () => {
+    const [rowData, setRowData] = useState([]);
+    const [gridApi, setGridApi] = useState(null);
+    const [gridColumnApi, setGridColumnApi] = useState(null);
 
     useEffect(() => {
-        //do something when the row selection changes
-    }, [rowSelection]);
+        const fetchData = async () => {
+            const res = await axios.get('http://localhost:3002/actual/getTodayDataTable');
+            setRowData(res.data);
+        };
 
-    //Or, optionally, you can get a reference to the underlying table instance
-    const tableInstanceRef = useRef(null);
+        fetchData();
+    }, []);
 
-    const someEventHandler = () => {
-        //read the table state during an event from the table instance ref
-        console.log(tableInstanceRef.current.getState().sorting);
-    }
+    const columnDefs = [
+        { headerName: 'Provincia', field: 'provincia', sortable: true },
+        { headerName: 'Municipio', field: 'municipio', sortable: true },
+        { headerName: 'Localidad', field: 'localidad', sortable: true, width: 180 },
+        { headerName: 'Dirección', field: 'direccion', sortable: true, width: 350 },
+        { headerName: 'CP', field: 'cp', sortable: true, width: "85%" },
+        { headerName: 'Gasoleo A', field: 'gasoleoA', sortable: true, width: 110 },
+        { headerName: 'Gasoleo B', field: 'gasoleoB', sortable: true, width: 110 },
+        { headerName: 'Gasoleo Premium', field: 'gasoleoPremium', sortable: true, width: 160, marginLeft: 0 },
+        { headerName: 'Gasolina 95 E5', field: 'gasolina95e5', sortable: true, width: 140 },
+        { headerName: 'Gasolina 98 E5', field: 'gasolina98e5', sortable: true },
+    ];
+
+    const onGridReady = (params) => {
+        setGridApi(params.api);
+        setGridColumnApi(params.columnApi);
+        params.api.sizeColumnsToFit();
+    };
+
+    const onQuickFilterText = (event) => {
+        gridApi.setQuickFilter(event.target.value);
+    };
 
     return (
-        <Container disableGutters sx={{ minWidth: "100%" }}>
+        <Box>
             <Header />
-            <MaterialReactTable
-                columns={columns}
-                data={data}
-                enableColumnOrdering //enable some features
-                enableRowSelection
-                enablePagination={false} //disable a default feature
-                onRowSelectionChange={setRowSelection} //hoist internal state to your own state (optional)
-                state={{ rowSelection }} //manage your own state, pass it back to the table (optional)
-                tableInstanceRef={tableInstanceRef} //get a reference to the underlying table instance (optional)
-            />
+            <Box className="ag-theme-alpine" style={{ height: 570, width: '100%' }}>
 
-        <Footer/> 
-        </Container>
+                <Box sx={{ textAlign: "center", marginTop: "1%", marginBottom: "1%" }}>
+                    <TextField id="outlined-basic" variant="outlined" onChange={onQuickFilterText} />
+                    <SearchIcon sx={{ height: 50, width: 50 }} onClick={onQuickFilterText} />
+                </Box>
+                <AgGridReact
+                    rowData={rowData}
+                    columnDefs={columnDefs}
+                    onGridReady={onGridReady}
+                    enableSorting={true}
+                    autoSizeColumns={true}
+                />
+            </Box>
+            <Box sx={{marginTop:"7%"}}>
+            <Footer/>
+            </Box>
+        </Box>
     );
-}
+};
+
+export default App;
