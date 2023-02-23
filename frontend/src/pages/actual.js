@@ -30,6 +30,7 @@ const App = () => {
         { headerName: 'Localidad', field: 'localidad', sortable: true, width: 180 },
         { headerName: 'Dirección', field: 'direccion', sortable: true, width: 350 },
         { headerName: 'CP', field: 'cp', sortable: true, width: "85%" },
+        { headerName: 'Rotulo', field: 'rotulo', sortable: true },
         { headerName: 'Gasoleo A', field: 'gasoleoA', sortable: true, width: 110 },
         { headerName: 'Gasoleo B', field: 'gasoleoB', sortable: true, width: 110 },
         { headerName: 'Gasoleo Premium', field: 'gasoleoPremium', sortable: true, width: 160, marginLeft: 0 },
@@ -50,13 +51,13 @@ const App = () => {
     return (
         <Box>
             <Header />
-            <Box className="ag-theme-alpine" style={{ height: 570, width: '100%' }}>
-
+            <Box className="ag-theme-alpine" style={{ height: "calc(87.5vh - 110px)", width: '100%' }}>
                 <Box sx={{ textAlign: "center", marginTop: "1%", marginBottom: "1%" }}>
-                    <TextField id="outlined-basic" variant="outlined" onChange={onQuickFilterText} />
+                    <TextField id="outlined-basic" variant="outlined" label="Filtrar..." onChange={onQuickFilterText} />
                     <SearchIcon sx={{ height: 50, width: 50 }} onClick={onQuickFilterText} />
                 </Box>
                 <AgGridReact
+                    sx={{ height: "calc(100vh - 110px)" }}
                     rowData={rowData}
                     columnDefs={columnDefs}
                     onGridReady={onGridReady}
@@ -64,8 +65,8 @@ const App = () => {
                     autoSizeColumns={true}
                 />
             </Box>
-            <Box sx={{marginTop:"7%"}}>
-            <Footer/>
+            <Box position={"absolute"} bottom={0} minWidth={"100%"}>
+                <Footer />
             </Box>
         </Box>
     );

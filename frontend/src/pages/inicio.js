@@ -62,12 +62,14 @@ export default function Inicio() {
               <Typography variant="texto" component="h2" gutterBottom>
                 {"Tramiento de datos de gasolineras a nivel Nacional."}
               </Typography>
+              <Typography component={"h3"} sx={{color:"white"}}>No se recopila ningun tipo de dato del usuario</Typography>
             </ThemeProvider>
             <Button
               style={{
                 backgroundColor: "white",
                 color: "black",
                 borderRadius: 20,
+                marginTop:"2%"
               }}
               onClick={(e) => navigate("/diario")}
               variant="contained"
