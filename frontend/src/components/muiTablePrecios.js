@@ -9,9 +9,6 @@ import Paper from '@mui/material/Paper';
 import { Box, Typography } from '@mui/material';
 
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
 
 export default function CustomTable({ rows, title }) {
   return (
@@ -22,10 +19,17 @@ export default function CustomTable({ rows, title }) {
           <TableHead>
             <TableRow>
               <TableCell></TableCell>
-              <TableCell align="right" sx={{fontWeight:"bold"}}>Calories</TableCell>
-              <TableCell align="right" sx={{fontWeight:"bold"}}>Fat&nbsp;(g)</TableCell>
-              <TableCell align="right" sx={{fontWeight:"bold"}}>Carbs&nbsp;(g)</TableCell>
-              <TableCell align="right" sx={{fontWeight:"bold", paddingRight:"2.5%"}}>Protein&nbsp;(g)</TableCell>
+              <TableCell align="right" sx={{fontWeight:"bold"}}>Provincia</TableCell>
+              <TableCell align="right" sx={{fontWeight:"bold"}}>Municipio</TableCell>
+              <TableCell align="right" sx={{fontWeight:"bold"}}>Localidad</TableCell>
+              <TableCell align="right" sx={{fontWeight:"bold", paddingRight:"2.5%"}}>Dirección</TableCell>
+              <TableCell align="right" sx={{fontWeight:"bold"}}>CP</TableCell>
+              <TableCell align="right" sx={{fontWeight:"bold"}}>Rotulo</TableCell>
+              <TableCell align="right" sx={{fontWeight:"bold"}}>Gasoleo A</TableCell>
+              <TableCell align="right" sx={{fontWeight:"bold"}}>Gasoleo B</TableCell>
+              <TableCell align="right" sx={{fontWeight:"bold"}}>Gasoleo Premium</TableCell>
+              <TableCell align="right" sx={{fontWeight:"bold"}}>Gasolina 95 E5</TableCell>
+              <TableCell align="right" sx={{fontWeight:"bold"}}>Gasolina 98 E5</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

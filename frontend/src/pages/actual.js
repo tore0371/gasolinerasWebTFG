@@ -19,6 +19,7 @@ const App = () => {
         const fetchData = async () => {
             const res = await axios.get('http://localhost:3002/actual/getTodayDataTable');
             setRowData(res.data);
+            console.log(rowData)
         };
 
         fetchData();

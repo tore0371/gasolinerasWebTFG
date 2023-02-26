@@ -49,11 +49,18 @@ const getTodayDataTable = async function (todayDate, tomorrowDate){
 }
 
 
+const getHighlightedPriceData = async function(){
+    
+
+
+}
+
 
 export {
     getAllGasolineras,
     getTodayData,
     getMeanProvinceValues,
-    getTodayDataTable
+    getTodayDataTable,
+    getHighlightedPriceData
 
 }
