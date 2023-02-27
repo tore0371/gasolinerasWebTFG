@@ -30,6 +30,7 @@ export default function CustomTable({ rows, title }) {
               <TableCell align="right" sx={{fontWeight:"bold"}}>Gasoleo Premium</TableCell>
               <TableCell align="right" sx={{fontWeight:"bold"}}>Gasolina 95 E5</TableCell>
               <TableCell align="right" sx={{fontWeight:"bold"}}>Gasolina 98 E5</TableCell>
+              <TableCell align="right" sx={{fontWeight:"bold"}}>Fecha</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -41,10 +42,21 @@ export default function CustomTable({ rows, title }) {
                 <TableCell component="th" scope="row" sx={{fontWeight:"bold"}}>
                   {row.name}
                 </TableCell>
-                <TableCell align="right">{row.calories}</TableCell>
-                <TableCell align="right">{row.fat}</TableCell>
-                <TableCell align="right">{row.carbs}</TableCell>
-                <TableCell align="right" sx={{paddingRight:"2.5%"}}>{row.protein}</TableCell>
+                <TableCell align="right">{row.provincia}</TableCell>
+                <TableCell align="right">{row.municipio}</TableCell>
+                <TableCell align="right">{row.localidad}</TableCell>
+                <TableCell align="right">{row.direccion}</TableCell>
+                <TableCell align="right">{row.cp}</TableCell>
+                <TableCell align="right">{row.rotulo}</TableCell>
+                <TableCell align="right">{row.gasoleoA}</TableCell>
+                <TableCell align="right">{row.gasoleoB}</TableCell>
+                <TableCell align="right">{row.gasoleoPremium}</TableCell>
+                <TableCell align="right">{row.gasolina95_E5}</TableCell>
+                <TableCell align="right">{row.gasolina98_E5}</TableCell>
+                <TableCell align="right">{row.fecha}</TableCell>
+
+
+
               </TableRow>
             ))}
           </TableBody>
