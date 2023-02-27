@@ -7,19 +7,21 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import Header from "../layouts/Header"
 import Footer from "../layouts/Footer"
-import { Box } from '@mui/material';
+import { Box, Typography, Grid } from '@mui/material';
 
 
 const App = () => {
     const [rowData, setRowData] = useState([]);
     const [gridApi, setGridApi] = useState(null);
     const [gridColumnApi, setGridColumnApi] = useState(null);
+    const [fechaActualizacion, setFechaActualizacion] = useState("No disponible")
 
     useEffect(() => {
         const fetchData = async () => {
             const res = await axios.get('http://localhost:3002/actual/getTodayDataTable');
-            setRowData(res.data);
-            console.log(rowData)
+            console.log(res.data)
+            setRowData(res.data[0]);
+            setFechaActualizacion(res.data[1])
         };
 
         fetchData();
@@ -53,10 +55,21 @@ const App = () => {
         <Box>
             <Header />
             <Box className="ag-theme-alpine" style={{ height: "calc(87.5vh - 110px)", width: '100%' }}>
-                <Box sx={{ textAlign: "center", marginTop: "1%", marginBottom: "1%" }}>
-                    <TextField id="outlined-basic" variant="outlined" label="Filtrar..." onChange={onQuickFilterText} />
-                    <SearchIcon sx={{ height: 50, width: 50 }} onClick={onQuickFilterText} />
-                </Box>
+                <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                        <Box sx={{ marginTop: "1%", marginBottom: "1%", marginLeft:"50%" }}>
+                            <TextField id="outlined-basic" variant="outlined" label="Filtrar..." onChange={onQuickFilterText} />
+                            <SearchIcon sx={{ height: 50, width: 50 }} onClick={onQuickFilterText} />
+                        </Box>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Box sx={{ marginTop: "3%", marginBottom: "1%", marginLeft:"5%" }}>
+                            <Typography>Ultima fecha de actualización: {fechaActualizacion}</Typography>
+                        </Box>
+                    </Grid>
+                </Grid>
+
+
                 <AgGridReact
                     sx={{ height: "calc(100vh - 110px)" }}
                     rowData={rowData}

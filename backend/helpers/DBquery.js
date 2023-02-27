@@ -38,7 +38,7 @@ const getMeanProvinceValues = async function (provincia) {
 }
 
 
-const getTodayDataTable = async function (todayDate, tomorrowDate){
+const getTodayDataTableDDBB = async function (todayDate, tomorrowDate){
     console.log("hola")
     var gasolinerasData = await sequelize.query(
         "select gas.PROVINCIA as provincia, gas.MUNICIPIO as municipio, gas.LOCALIDAD as localidad, gas.DIRECCION as direccion, gas.CP as cp, gas.ROTULO as rotulo, dat.PRECIO_GASOLEO_A as gasoleoA, dat.PRECIO_GASOLEO_B as gasoleoB, dat.PRECIO_GASOLEO_PREMIUM as gasoleoPremium, dat.PRECIO_GASOLINA_95_E5 as gasolina95e5, dat.PRECIO_GASOLINA_98_E5 as gasolina98e5\
@@ -60,7 +60,7 @@ export {
     getAllGasolineras,
     getTodayData,
     getMeanProvinceValues,
-    getTodayDataTable,
+    getTodayDataTableDDBB,
     getHighlightedPriceData
 
 }
