@@ -18,13 +18,11 @@ const App = () => {
 
 
     // sabes porque se me esta haciendo dos veces esta peticion??
-
     const fetchData = async () => {
 
         axios.get('http://localhost:3002/actual/getTodayDataTable')
             .then(response => {
                 // Obtenemos los datos
-                console.log(response.data)
                 setRowData(response.data[0]);
                 setFechaActualizacion(response.data[1])
             })
@@ -36,10 +34,10 @@ const App = () => {
     };
 
     useEffect(() => {
-        console.log("tusms")
-
-        fetchData();
+        console.log("em")
+        fetchData()
     }, []);
+
 
     const columnDefs = [
         { headerName: 'Provincia', field: 'provincia', sortable: true },
