@@ -16,13 +16,27 @@ const App = () => {
     const [gridColumnApi, setGridColumnApi] = useState(null);
     const [fechaActualizacion, setFechaActualizacion] = useState("No disponible")
 
+
+    // sabes porque se me esta haciendo dos veces esta peticion??
+
+    const fetchData = async () => {
+
+        axios.get('http://localhost:3002/actual/getTodayDataTable')
+            .then(response => {
+                // Obtenemos los datos
+                console.log(response.data)
+                setRowData(response.data[0]);
+                setFechaActualizacion(response.data[1])
+            })
+            .catch(e => {
+                // Capturamos los errores           
+                console.log(e)
+
+            })
+    };
+
     useEffect(() => {
-        const fetchData = async () => {
-            const res = await axios.get('http://localhost:3002/actual/getTodayDataTable');
-            console.log(res.data)
-            setRowData(res.data[0]);
-            setFechaActualizacion(res.data[1])
-        };
+        console.log("tusms")
 
         fetchData();
     }, []);
@@ -57,14 +71,14 @@ const App = () => {
             <Box className="ag-theme-alpine" style={{ height: "calc(87.5vh - 110px)", width: '100%' }}>
                 <Grid container spacing={2}>
                     <Grid item xs={6}>
-                        <Box sx={{ marginTop: "1%", marginBottom: "1%", marginLeft:"50%" }}>
+                        <Box sx={{ marginTop: "1%", marginBottom: "1%", marginLeft: "50%" }}>
                             <TextField id="outlined-basic" variant="outlined" label="Filtrar..." onChange={onQuickFilterText} />
                             <SearchIcon sx={{ height: 50, width: 50 }} onClick={onQuickFilterText} />
                         </Box>
                     </Grid>
                     <Grid item xs={6}>
-                        <Box sx={{ marginTop: "3%", marginBottom: "1%", marginLeft:"5%" }}>
-                            <Typography>Ultima fecha de actualización: {fechaActualizacion}</Typography>
+                        <Box sx={{ marginTop: "3%", marginBottom: "1%", marginLeft: "5%" }}>
+                            <Typography>Última fecha de actualización: {fechaActualizacion}</Typography>
                         </Box>
                     </Grid>
                 </Grid>
