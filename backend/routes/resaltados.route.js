@@ -1,5 +1,6 @@
 import express from 'express'
-import { getTablePreciosGasoleoA, getTablePreciosGasoleoB, getTablePreciosGasoleoPremium } from "../controllers/resaltados.controller.js"
+import { getTablePreciosGasoleoA, getTablePreciosGasoleoB, getTablePreciosGasoleoPremium,
+    getTablePreciosGasolina95, getTablePreciosGasolina98, getTableGasolineras } from "../controllers/resaltados.controller.js"
 
 
 const router = express.Router()
@@ -16,6 +17,18 @@ router
 router
     .route('/getTablePreciosGasoleoPremium')
     .get(getTablePreciosGasoleoPremium)
+
+router
+    .route('/getTablePreciosGasolina95')
+    .get(getTablePreciosGasolina95)
+
+router
+    .route('/getTablePreciosGasolina98')
+    .get(getTablePreciosGasolina98)
+
+router
+    .route('/getGasolineras')
+    .get(getTableGasolineras)
 
 
 

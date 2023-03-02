@@ -34,11 +34,11 @@ const getMeanProvinceValues = async function (provincia) {
     var gasolina95 = gasolinerasData[0][0]["gasolina95_E5"] != null ? gasolinerasData[0][0]["gasolina95_E5"] : 0
     var gasolina98 = gasolinerasData[0][0]["gasolina98_E5"] != null ? gasolinerasData[0][0]["gasolina98_E5"] : 0
 
-    return([provincia[0], provincia[1], provincia[2], gasoleoA, gasoleoPremium, gasoleoB, gasolina95, gasolina98])
+    return ([provincia[0], provincia[1], provincia[2], gasoleoA, gasoleoPremium, gasoleoB, gasolina95, gasolina98])
 }
 
 
-const getTodayDataTableDDBB = async function (todayDate, tomorrowDate){
+const getTodayDataTableDDBB = async function (todayDate, tomorrowDate) {
     console.log("hola")
     var gasolinerasData = await sequelize.query(
         "select gas.PROVINCIA as provincia, gas.MUNICIPIO as municipio, gas.LOCALIDAD as localidad, gas.DIRECCION as direccion, gas.CP as cp, gas.ROTULO as rotulo, dat.PRECIO_GASOLEO_A as gasoleoA, dat.PRECIO_GASOLEO_B as gasoleoB, dat.PRECIO_GASOLEO_PREMIUM as gasoleoPremium, dat.PRECIO_GASOLINA_95_E5 as gasolina95e5, dat.PRECIO_GASOLINA_98_E5 as gasolina98e5\
@@ -46,10 +46,10 @@ const getTodayDataTableDDBB = async function (todayDate, tomorrowDate){
         WHERE dat.FECHA >= '" + todayDate + "' AND dat.FECHA <'" + tomorrowDate + "' and gas.ID_GASOLINERA = dat.ID_GASOLINERA"
     );
     return gasolinerasData[0]
-} 
+}
 
 
-const getTodayMinGasoilATodayPrice = async function(todayDate, tomorrowDate){
+const getTodayMinGasoilATodayPrice = async function (todayDate, tomorrowDate) {
     var data = await sequelize.query(
         "SELECT TOP 1 *\
         FROM (\
@@ -75,7 +75,7 @@ const getTodayMinGasoilATodayPrice = async function(todayDate, tomorrowDate){
     return data[0]
 }
 
-const getTodayMaxGasoilATodayPrice = async function(todayDate, tomorrowDate){
+const getTodayMaxGasoilATodayPrice = async function (todayDate, tomorrowDate) {
     var data = await sequelize.query(
         "SELECT TOP 1 *\
         FROM (\
@@ -102,7 +102,7 @@ const getTodayMaxGasoilATodayPrice = async function(todayDate, tomorrowDate){
 }
 
 
-const getMinGasoilAPrice = async function(){
+const getMinGasoilAPrice = async function () {
     var data = await sequelize.query(
         "SELECT TOP 1 *\
         FROM (\
@@ -128,7 +128,7 @@ const getMinGasoilAPrice = async function(){
     return data[0]
 }
 
-const getMaxGasoilAPrice = async function(){
+const getMaxGasoilAPrice = async function () {
     var data = await sequelize.query(
         "SELECT TOP 1 *\
         FROM (\
@@ -155,7 +155,7 @@ const getMaxGasoilAPrice = async function(){
 }
 
 
-const getTodayMinGasoilBTodayPrice = async function(todayDate, tomorrowDate){
+const getTodayMinGasoilBTodayPrice = async function (todayDate, tomorrowDate) {
     var data = await sequelize.query(
         "SELECT TOP 1 *\
         FROM (\
@@ -181,7 +181,7 @@ const getTodayMinGasoilBTodayPrice = async function(todayDate, tomorrowDate){
     return data[0]
 }
 
-const getMinGasoilBPrice = async function(){
+const getMinGasoilBPrice = async function () {
     var data = await sequelize.query(
         "SELECT TOP 1 *\
         FROM (\
@@ -207,7 +207,7 @@ const getMinGasoilBPrice = async function(){
     return data[0]
 }
 
-const getTodayMaxGasoilBTodayPrice = async function(todayDate, tomorrowDate){
+const getTodayMaxGasoilBTodayPrice = async function (todayDate, tomorrowDate) {
     var data = await sequelize.query(
         "SELECT TOP 1 *\
         FROM (\
@@ -234,7 +234,7 @@ const getTodayMaxGasoilBTodayPrice = async function(todayDate, tomorrowDate){
 }
 
 
-const getMaxGasoilBPrice = async function(){
+const getMaxGasoilBPrice = async function () {
     var data = await sequelize.query(
         "SELECT TOP 1 *\
         FROM (\
@@ -260,6 +260,332 @@ const getMaxGasoilBPrice = async function(){
     return data[0]
 }
 
+const getTodayMinGasoilPremiumTodayPrice = async function (todayDate, tomorrowDate) {
+    var data = await sequelize.query(
+        "SELECT TOP 1 *\
+        FROM (\
+          SELECT gas.PROVINCIA AS provincia,\
+                 gas.MUNICIPIO AS municipio,\
+                 gas.LOCALIDAD AS localidad,\
+                 gas.DIRECCION AS direccion,\
+                 gas.CP AS cp,\
+                 gas.ROTULO AS rotulo,\
+                 dat.PRECIO_GASOLEO_A AS gasoleoA,\
+                 dat.PRECIO_GASOLEO_B AS gasoleoB,\
+                 MIN(dat.PRECIO_GASOLEO_PREMIUM) AS gasoleoPremium,\
+                 dat.PRECIO_GASOLINA_95_E5 AS gasolina95e5,\
+                 dat.PRECIO_GASOLINA_98_E5 AS gasolina98e5,\
+                 CONVERT(varchar(10), dat.FECHA, 105) AS fecha\
+          FROM GASOLINERAS gas\
+          JOIN DATA_GASOLINERAS dat ON gas.ID_GASOLINERA = dat.ID_GASOLINERA\
+          WHERE FECHA >= '" + todayDate + "' AND FECHA < '" + tomorrowDate + "' AND dat.PRECIO_GASOLEO_PREMIUM IS NOT NULL\
+          GROUP BY gas.PROVINCIA, gas.MUNICIPIO, gas.LOCALIDAD, gas.DIRECCION, gas.CP, gas.ROTULO, dat.PRECIO_GASOLEO_A, dat.PRECIO_GASOLEO_B, dat.PRECIO_GASOLINA_95_E5, dat.PRECIO_GASOLINA_98_E5, dat.FECHA\
+        ) t\
+        ORDER BY gasoleoPremium ASC"
+    )
+    return data[0]
+}
+
+const getMinGasoilPremiumPrice = async function () {
+    var data = await sequelize.query(
+        "SELECT TOP 1 *\
+        FROM (\
+          SELECT gas.PROVINCIA AS provincia,\
+                 gas.MUNICIPIO AS municipio,\
+                 gas.LOCALIDAD AS localidad,\
+                 gas.DIRECCION AS direccion,\
+                 gas.CP AS cp,\
+                 gas.ROTULO AS rotulo,\
+                 dat.PRECIO_GASOLEO_A AS gasoleoA,\
+                 dat.PRECIO_GASOLEO_B AS gasoleoB,\
+                 MIN(dat.PRECIO_GASOLEO_PREMIUM) AS gasoleoPremium,\
+                 dat.PRECIO_GASOLINA_95_E5 AS gasolina95e5,\
+                 dat.PRECIO_GASOLINA_98_E5 AS gasolina98e5,\
+                 CONVERT(varchar(10), dat.FECHA, 105) AS fecha\
+          FROM GASOLINERAS gas\
+          JOIN DATA_GASOLINERAS dat ON gas.ID_GASOLINERA = dat.ID_GASOLINERA\
+          WHERE dat.PRECIO_GASOLEO_PREMIUM IS NOT NULL\
+          GROUP BY gas.PROVINCIA, gas.MUNICIPIO, gas.LOCALIDAD, gas.DIRECCION, gas.CP, gas.ROTULO, dat.PRECIO_GASOLEO_A, dat.PRECIO_GASOLEO_B, dat.PRECIO_GASOLINA_95_E5, dat.PRECIO_GASOLINA_98_E5, dat.FECHA\
+        ) t\
+        ORDER BY gasoleoPremium ASC"
+    )
+    return data[0]
+}
+
+
+const getTodayMaxGasoilPremiumTodayPrice = async function (todayDate, tomorrowDate) {
+    var data = await sequelize.query(
+        "SELECT TOP 1 *\
+        FROM (\
+          SELECT gas.PROVINCIA AS provincia,\
+                 gas.MUNICIPIO AS municipio,\
+                 gas.LOCALIDAD AS localidad,\
+                 gas.DIRECCION AS direccion,\
+                 gas.CP AS cp,\
+                 gas.ROTULO AS rotulo,\
+                 dat.PRECIO_GASOLEO_A AS gasoleoA,\
+                 dat.PRECIO_GASOLEO_B AS gasoleoB,\
+                 MIN(dat.PRECIO_GASOLEO_PREMIUM) AS gasoleoPremium,\
+                 dat.PRECIO_GASOLINA_95_E5 AS gasolina95e5,\
+                 dat.PRECIO_GASOLINA_98_E5 AS gasolina98e5,\
+                 CONVERT(varchar(10), dat.FECHA, 105) AS fecha\
+          FROM GASOLINERAS gas\
+          JOIN DATA_GASOLINERAS dat ON gas.ID_GASOLINERA = dat.ID_GASOLINERA\
+          WHERE FECHA >= '" + todayDate + "' AND FECHA < '" + tomorrowDate + "' AND dat.PRECIO_GASOLEO_PREMIUM IS NOT NULL\
+          GROUP BY gas.PROVINCIA, gas.MUNICIPIO, gas.LOCALIDAD, gas.DIRECCION, gas.CP, gas.ROTULO, dat.PRECIO_GASOLEO_A, dat.PRECIO_GASOLEO_B, dat.PRECIO_GASOLINA_95_E5, dat.PRECIO_GASOLINA_98_E5, dat.FECHA\
+        ) t\
+        ORDER BY gasoleoPremium desc"
+    )
+    return data[0]
+}
+
+
+const getMaxGasoilPremiumPrice = async function () {
+    var data = await sequelize.query(
+        "SELECT TOP 1 *\
+        FROM (\
+          SELECT gas.PROVINCIA AS provincia,\
+                 gas.MUNICIPIO AS municipio,\
+                 gas.LOCALIDAD AS localidad,\
+                 gas.DIRECCION AS direccion,\
+                 gas.CP AS cp,\
+                 gas.ROTULO AS rotulo,\
+                 dat.PRECIO_GASOLEO_A AS gasoleoA,\
+                 dat.PRECIO_GASOLEO_B AS gasoleoB,\
+                 MIN(dat.PRECIO_GASOLEO_PREMIUM) AS gasoleoPremium,\
+                 dat.PRECIO_GASOLINA_95_E5 AS gasolina95e5,\
+                 dat.PRECIO_GASOLINA_98_E5 AS gasolina98e5,\
+                 CONVERT(varchar(10), dat.FECHA, 105) AS fecha\
+          FROM GASOLINERAS gas\
+          JOIN DATA_GASOLINERAS dat ON gas.ID_GASOLINERA = dat.ID_GASOLINERA\
+          WHERE dat.PRECIO_GASOLEO_PREMIUM IS NOT NULL\
+          GROUP BY gas.PROVINCIA, gas.MUNICIPIO, gas.LOCALIDAD, gas.DIRECCION, gas.CP, gas.ROTULO, dat.PRECIO_GASOLEO_A, dat.PRECIO_GASOLEO_B, dat.PRECIO_GASOLINA_95_E5, dat.PRECIO_GASOLINA_98_E5, dat.FECHA\
+        ) t\
+        ORDER BY gasoleoPremium desc"
+    )
+    return data[0]
+}
+
+const getTodayMinGasolina95TodayPrice = async function (todayDate, tomorrowDate) {
+    var data = await sequelize.query(
+        "SELECT TOP 1 *\
+        FROM (\
+          SELECT gas.PROVINCIA AS provincia,\
+                 gas.MUNICIPIO AS municipio,\
+                 gas.LOCALIDAD AS localidad,\
+                 gas.DIRECCION AS direccion,\
+                 gas.CP AS cp,\
+                 gas.ROTULO AS rotulo,\
+                 dat.PRECIO_GASOLEO_A AS gasoleoA,\
+                 dat.PRECIO_GASOLEO_B AS gasoleoB,\
+                 dat.PRECIO_GASOLEO_PREMIUM AS gasoleoPremium,\
+                 MIN(dat.PRECIO_GASOLINA_95_E5) AS gasolina95e5,\
+                 dat.PRECIO_GASOLINA_98_E5 AS gasolina98e5,\
+                 CONVERT(varchar(10), dat.FECHA, 105) AS fecha\
+          FROM GASOLINERAS gas\
+          JOIN DATA_GASOLINERAS dat ON gas.ID_GASOLINERA = dat.ID_GASOLINERA\
+          WHERE FECHA >= '" + todayDate + "' AND FECHA < '" + tomorrowDate + "' AND dat.PRECIO_GASOLINA_95_E5 IS NOT NULL\
+          GROUP BY gas.PROVINCIA, gas.MUNICIPIO, gas.LOCALIDAD, gas.DIRECCION, gas.CP, gas.ROTULO, dat.PRECIO_GASOLEO_A, dat.PRECIO_GASOLEO_B, dat.PRECIO_GASOLEO_PREMIUM, dat.PRECIO_GASOLINA_98_E5, dat.FECHA\
+        ) t\
+        ORDER BY gasolina95e5 ASC"
+    )
+    return data[0]
+}
+const getMinGasolina95Price = async function () {
+    var data = await sequelize.query(
+        "SELECT TOP 1 *\
+        FROM (\
+          SELECT gas.PROVINCIA AS provincia,\
+                 gas.MUNICIPIO AS municipio,\
+                 gas.LOCALIDAD AS localidad,\
+                 gas.DIRECCION AS direccion,\
+                 gas.CP AS cp,\
+                 gas.ROTULO AS rotulo,\
+                 dat.PRECIO_GASOLEO_A AS gasoleoA,\
+                 dat.PRECIO_GASOLEO_B AS gasoleoB,\
+                 dat.PRECIO_GASOLEO_PREMIUM AS gasoleoPremium,\
+                 MIN(dat.PRECIO_GASOLINA_95_E5) AS gasolina95e5,\
+                 dat.PRECIO_GASOLINA_98_E5 AS gasolina98e5,\
+                 CONVERT(varchar(10), dat.FECHA, 105) AS fecha\
+          FROM GASOLINERAS gas\
+          JOIN DATA_GASOLINERAS dat ON gas.ID_GASOLINERA = dat.ID_GASOLINERA\
+          WHERE dat.PRECIO_GASOLINA_95_E5 IS NOT NULL\
+          GROUP BY gas.PROVINCIA, gas.MUNICIPIO, gas.LOCALIDAD, gas.DIRECCION, gas.CP, gas.ROTULO, dat.PRECIO_GASOLEO_A, dat.PRECIO_GASOLEO_B, dat.PRECIO_GASOLEO_PREMIUM, dat.PRECIO_GASOLINA_98_E5, dat.FECHA\
+        ) t\
+        ORDER BY gasolina95e5 ASC"
+    )
+    return data[0]
+}
+
+const getTodayExpensiveGasolina95Price = async function (todayDate, tomorrowDate) {
+    var data = await sequelize.query(
+        "SELECT TOP 1 *\
+        FROM (\
+          SELECT gas.PROVINCIA AS provincia,\
+                 gas.MUNICIPIO AS municipio,\
+                 gas.LOCALIDAD AS localidad,\
+                 gas.DIRECCION AS direccion,\
+                 gas.CP AS cp,\
+                 gas.ROTULO AS rotulo,\
+                 dat.PRECIO_GASOLEO_A AS gasoleoA,\
+                 dat.PRECIO_GASOLEO_B AS gasoleoB,\
+                 dat.PRECIO_GASOLEO_PREMIUM AS gasoleoPremium,\
+                 MIN(dat.PRECIO_GASOLINA_95_E5) AS gasolina95e5,\
+                 dat.PRECIO_GASOLINA_98_E5 AS gasolina98e5,\
+                 CONVERT(varchar(10), dat.FECHA, 105) AS fecha\
+          FROM GASOLINERAS gas\
+          JOIN DATA_GASOLINERAS dat ON gas.ID_GASOLINERA = dat.ID_GASOLINERA\
+          WHERE FECHA >= '" + todayDate + "' AND FECHA < '" + tomorrowDate + "' AND dat.PRECIO_GASOLINA_95_E5 IS NOT NULL\
+          GROUP BY gas.PROVINCIA, gas.MUNICIPIO, gas.LOCALIDAD, gas.DIRECCION, gas.CP, gas.ROTULO, dat.PRECIO_GASOLEO_A, dat.PRECIO_GASOLEO_B, dat.PRECIO_GASOLEO_PREMIUM, dat.PRECIO_GASOLINA_98_E5, dat.FECHA\
+        ) t\
+        ORDER BY gasolina95e5 desc"
+    )
+    return data[0]
+}
+
+
+const getMaxGasolina95Price = async function () {
+    var data = await sequelize.query(
+        "SELECT TOP 1 *\
+        FROM (\
+          SELECT gas.PROVINCIA AS provincia,\
+                 gas.MUNICIPIO AS municipio,\
+                 gas.LOCALIDAD AS localidad,\
+                 gas.DIRECCION AS direccion,\
+                 gas.CP AS cp,\
+                 gas.ROTULO AS rotulo,\
+                 dat.PRECIO_GASOLEO_A AS gasoleoA,\
+                 dat.PRECIO_GASOLEO_B AS gasoleoB,\
+                 dat.PRECIO_GASOLEO_PREMIUM AS gasoleoPremium,\
+                 MIN(dat.PRECIO_GASOLINA_95_E5) AS gasolina95e5,\
+                 dat.PRECIO_GASOLINA_98_E5 AS gasolina98e5,\
+                 CONVERT(varchar(10), dat.FECHA, 105) AS fecha\
+          FROM GASOLINERAS gas\
+          JOIN DATA_GASOLINERAS dat ON gas.ID_GASOLINERA = dat.ID_GASOLINERA\
+          WHERE dat.PRECIO_GASOLINA_95_E5 IS NOT NULL\
+          GROUP BY gas.PROVINCIA, gas.MUNICIPIO, gas.LOCALIDAD, gas.DIRECCION, gas.CP, gas.ROTULO, dat.PRECIO_GASOLEO_A, dat.PRECIO_GASOLEO_B, dat.PRECIO_GASOLEO_PREMIUM, dat.PRECIO_GASOLINA_98_E5, dat.FECHA\
+        ) t\
+        ORDER BY gasolina95e5 desc"
+    )
+    return data[0]
+}
+
+const getTodayMinGasolina98TodayPrice = async function (todayDate, tomorrowDate) {
+    var data = await sequelize.query(
+        "SELECT TOP 1 *\
+        FROM (\
+          SELECT gas.PROVINCIA AS provincia,\
+                 gas.MUNICIPIO AS municipio,\
+                 gas.LOCALIDAD AS localidad,\
+                 gas.DIRECCION AS direccion,\
+                 gas.CP AS cp,\
+                 gas.ROTULO AS rotulo,\
+                 dat.PRECIO_GASOLEO_A AS gasoleoA,\
+                 dat.PRECIO_GASOLEO_B AS gasoleoB,\
+                 dat.PRECIO_GASOLEO_PREMIUM AS gasoleoPremium,\
+                 dat.PRECIO_GASOLINA_95_E5 AS gasolina95e5,\
+                 MIN(dat.PRECIO_GASOLINA_98_E5) AS gasolina98e5,\
+                 CONVERT(varchar(10), dat.FECHA, 105) AS fecha\
+          FROM GASOLINERAS gas\
+          JOIN DATA_GASOLINERAS dat ON gas.ID_GASOLINERA = dat.ID_GASOLINERA\
+          WHERE FECHA >= '" + todayDate + "' AND FECHA < '" + tomorrowDate + "' AND dat.PRECIO_GASOLINA_98_E5 IS NOT NULL\
+          GROUP BY gas.PROVINCIA, gas.MUNICIPIO, gas.LOCALIDAD, gas.DIRECCION, gas.CP, gas.ROTULO, dat.PRECIO_GASOLEO_A, dat.PRECIO_GASOLEO_B, dat.PRECIO_GASOLEO_PREMIUM, dat.PRECIO_GASOLINA_95_E5, dat.FECHA\
+        ) t\
+        ORDER BY gasolina98e5 ASC"
+    )
+    return data[0]
+}
+
+
+const getMinGasolina98Price = async function () {
+    var data = await sequelize.query(
+        "SELECT TOP 1 *\
+        FROM (\
+          SELECT gas.PROVINCIA AS provincia,\
+                 gas.MUNICIPIO AS municipio,\
+                 gas.LOCALIDAD AS localidad,\
+                 gas.DIRECCION AS direccion,\
+                 gas.CP AS cp,\
+                 gas.ROTULO AS rotulo,\
+                 dat.PRECIO_GASOLEO_A AS gasoleoA,\
+                 dat.PRECIO_GASOLEO_B AS gasoleoB,\
+                 dat.PRECIO_GASOLEO_PREMIUM AS gasoleoPremium,\
+                 dat.PRECIO_GASOLINA_95_E5 AS gasolina95e5,\
+                 MIN(dat.PRECIO_GASOLINA_98_E5) AS gasolina98e5,\
+                 CONVERT(varchar(10), dat.FECHA, 105) AS fecha\
+          FROM GASOLINERAS gas\
+          JOIN DATA_GASOLINERAS dat ON gas.ID_GASOLINERA = dat.ID_GASOLINERA\
+          WHERE dat.PRECIO_GASOLINA_98_E5 IS NOT NULL\
+          GROUP BY gas.PROVINCIA, gas.MUNICIPIO, gas.LOCALIDAD, gas.DIRECCION, gas.CP, gas.ROTULO, dat.PRECIO_GASOLEO_A, dat.PRECIO_GASOLEO_B, dat.PRECIO_GASOLEO_PREMIUM, dat.PRECIO_GASOLINA_95_E5, dat.FECHA\
+        ) t\
+        ORDER BY gasolina98e5 ASC"
+    )
+    return data[0]
+}
+
+const getTodayExpensiveGasolina98Price = async function (todayDate, tomorrowDate) {
+    var data = await sequelize.query(
+        "SELECT TOP 1 *\
+        FROM (\
+          SELECT gas.PROVINCIA AS provincia,\
+                 gas.MUNICIPIO AS municipio,\
+                 gas.LOCALIDAD AS localidad,\
+                 gas.DIRECCION AS direccion,\
+                 gas.CP AS cp,\
+                 gas.ROTULO AS rotulo,\
+                 dat.PRECIO_GASOLEO_A AS gasoleoA,\
+                 dat.PRECIO_GASOLEO_B AS gasoleoB,\
+                 dat.PRECIO_GASOLEO_PREMIUM AS gasoleoPremium,\
+                 dat.PRECIO_GASOLINA_95_E5 AS gasolina95e5,\
+                 MIN(dat.PRECIO_GASOLINA_98_E5) AS gasolina98e5,\
+                 CONVERT(varchar(10), dat.FECHA, 105) AS fecha\
+          FROM GASOLINERAS gas\
+          JOIN DATA_GASOLINERAS dat ON gas.ID_GASOLINERA = dat.ID_GASOLINERA\
+          WHERE FECHA >= '" + todayDate + "' AND FECHA < '" + tomorrowDate + "' AND dat.PRECIO_GASOLINA_98_E5 IS NOT NULL\
+          GROUP BY gas.PROVINCIA, gas.MUNICIPIO, gas.LOCALIDAD, gas.DIRECCION, gas.CP, gas.ROTULO, dat.PRECIO_GASOLEO_A, dat.PRECIO_GASOLEO_B, dat.PRECIO_GASOLEO_PREMIUM, dat.PRECIO_GASOLINA_95_E5, dat.FECHA\
+        ) t\
+        ORDER BY gasolina98e5 DESC"
+    )
+    return data[0]
+}
+
+const getMaxGasolina98Price = async function () {
+    var data = await sequelize.query(
+        "SELECT TOP 1 *\
+        FROM (\
+          SELECT gas.PROVINCIA AS provincia,\
+                 gas.MUNICIPIO AS municipio,\
+                 gas.LOCALIDAD AS localidad,\
+                 gas.DIRECCION AS direccion,\
+                 gas.CP AS cp,\
+                 gas.ROTULO AS rotulo,\
+                 dat.PRECIO_GASOLEO_A AS gasoleoA,\
+                 dat.PRECIO_GASOLEO_B AS gasoleoB,\
+                 dat.PRECIO_GASOLEO_PREMIUM AS gasoleoPremium,\
+                 dat.PRECIO_GASOLINA_95_E5 AS gasolina95e5,\
+                 MIN(dat.PRECIO_GASOLINA_98_E5) AS gasolina98e5,\
+                 CONVERT(varchar(10), dat.FECHA, 105) AS fecha\
+          FROM GASOLINERAS gas\
+          JOIN DATA_GASOLINERAS dat ON gas.ID_GASOLINERA = dat.ID_GASOLINERA\
+          WHERE dat.PRECIO_GASOLINA_98_E5 IS NOT NULL\
+          GROUP BY gas.PROVINCIA, gas.MUNICIPIO, gas.LOCALIDAD, gas.DIRECCION, gas.CP, gas.ROTULO, dat.PRECIO_GASOLEO_A, dat.PRECIO_GASOLEO_B, dat.PRECIO_GASOLEO_PREMIUM, dat.PRECIO_GASOLINA_95_E5, dat.FECHA\
+        ) t\
+        ORDER BY gasolina98e5 DESC"
+    )
+    return data[0]
+}
+
+
+const getNumGasolineras = async function () {
+    var data = await sequelize.query(
+        "SELECT TOP 10 ROTULO, COUNT(*) AS NUMERO_DE_GASOLINERAS\
+            FROM GASOLINERAS\
+            GROUP BY ROTULO\
+            ORDER BY COUNT(*) DESC;"
+    )
+    return data[0]
+}
+
 export {
     getAllGasolineras,
     getTodayData,
@@ -272,7 +598,20 @@ export {
     getTodayMinGasoilBTodayPrice,
     getMinGasoilBPrice,
     getTodayMaxGasoilBTodayPrice,
-    getMaxGasoilBPrice
+    getMaxGasoilBPrice,
+    getTodayMinGasoilPremiumTodayPrice,
+    getMinGasoilPremiumPrice,
+    getTodayMaxGasoilPremiumTodayPrice,
+    getMaxGasoilPremiumPrice,
+    getTodayMinGasolina95TodayPrice,
+    getMinGasolina95Price,
+    getTodayExpensiveGasolina95Price,
+    getMaxGasolina95Price,
+    getTodayMinGasolina98TodayPrice,
+    getMinGasolina98Price,
+    getTodayExpensiveGasolina98Price,
+    getMaxGasolina98Price,
+    getNumGasolineras
 
 
 }
