@@ -541,7 +541,7 @@ const getTodayExpensiveGasolina98Price = async function (todayDate, tomorrowDate
                  CONVERT(varchar(10), dat.FECHA, 105) AS fecha\
           FROM GASOLINERAS gas\
           JOIN DATA_GASOLINERAS dat ON gas.ID_GASOLINERA = dat.ID_GASOLINERA\
-          WHERE FECHA >= '" + todayDate + "' AND FECHA < '" + tomorrowDate + "' AND dat.PRECIO_GASOLINA_98_E5 IS NOT NULL\
+          WHERE FECHA >= '" + todayDate + "' AND FECHA < '" + tomorrowDate + "' AND (dat.PRECIO_GASOLINA_98_E5 IS NOT NULL) and (dat.PRECIO_GASOLINA_98_E5 <> 2.999)\
           GROUP BY gas.PROVINCIA, gas.MUNICIPIO, gas.LOCALIDAD, gas.DIRECCION, gas.CP, gas.ROTULO, dat.PRECIO_GASOLEO_A, dat.PRECIO_GASOLEO_B, dat.PRECIO_GASOLEO_PREMIUM, dat.PRECIO_GASOLINA_95_E5, dat.FECHA\
         ) t\
         ORDER BY gasolina98e5 DESC"
@@ -567,7 +567,7 @@ const getMaxGasolina98Price = async function () {
                  CONVERT(varchar(10), dat.FECHA, 105) AS fecha\
           FROM GASOLINERAS gas\
           JOIN DATA_GASOLINERAS dat ON gas.ID_GASOLINERA = dat.ID_GASOLINERA\
-          WHERE dat.PRECIO_GASOLINA_98_E5 IS NOT NULL\
+          WHERE (dat.PRECIO_GASOLINA_98_E5 IS NOT NULL) and (dat.PRECIO_GASOLINA_98_E5 <> 2.999)\
           GROUP BY gas.PROVINCIA, gas.MUNICIPIO, gas.LOCALIDAD, gas.DIRECCION, gas.CP, gas.ROTULO, dat.PRECIO_GASOLEO_A, dat.PRECIO_GASOLEO_B, dat.PRECIO_GASOLEO_PREMIUM, dat.PRECIO_GASOLINA_95_E5, dat.FECHA\
         ) t\
         ORDER BY gasolina98e5 DESC"
@@ -582,6 +582,15 @@ const getNumGasolineras = async function () {
             FROM GASOLINERAS\
             GROUP BY ROTULO\
             ORDER BY COUNT(*) DESC;"
+    )
+    return data[0]
+}
+
+// devuelve todos los diferentes rotulos que de los que se disponen en 
+// la base de datos
+const getRotulos = async function (){
+    var data = await sequelize.query(
+        "SELECT distinct ROTULO from gasolineras"
     )
     return data[0]
 }
@@ -611,7 +620,8 @@ export {
     getMinGasolina98Price,
     getTodayExpensiveGasolina98Price,
     getMaxGasolina98Price,
-    getNumGasolineras
+    getNumGasolineras,
+    getRotulos
 
 
 }

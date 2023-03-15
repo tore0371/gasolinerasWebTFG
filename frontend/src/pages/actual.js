@@ -17,7 +17,6 @@ const App = () => {
     const [fechaActualizacion, setFechaActualizacion] = useState("No disponible")
 
 
-    // sabes porque se me esta haciendo dos veces esta peticion??
     const fetchData = async () => {
 
         axios.get('http://localhost:3002/actual/getTodayDataTable')

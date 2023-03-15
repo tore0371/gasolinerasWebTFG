@@ -5,6 +5,7 @@ import Footer from "../layouts/Footer"
 import CustomTablePrecios from "../components/muiTablePrecios"
 import CustomTableGasolineras from '../components/muiTableNumGasolineras';
 import axios from 'axios';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 
@@ -126,34 +127,38 @@ export default function BasicTable() {
     //gasolina98
     useEffect(() => {
         const fetchData = async () => {
-            const res = await axios.get('http://localhost:3002/resaltados/getTablePreciosGasolina98');
-            setminGasolina98Today(res.data[0][0])
-            setMinGasolina98(res.data[1][0])
-            setMaxGasolina98Today(res.data[2][0])
-            setMaxGasolina98(res.data[3][0])
+            const res98 = await axios.get('http://localhost:3002/resaltados/getTablePreciosGasolina98');
+            setminGasolina98Today(res98.data[0][0])
+            setMinGasolina98(res98.data[1][0])
+            setMaxGasolina98Today(res98.data[2][0])
+            setMaxGasolina98(res98.data[3][0])
+            console.log("********")
+            console.log(res98.data[3][0])
+            console.log("********")
+
         }
         fetchData()
     }, []);
 
     useEffect(() => {
         const fetchData = async () => {
-          const res = await axios.get('http://localhost:3002/resaltados/getGasolineras');
-          setNumGasolineras1(res.data[0]);          
-          setNumGasolineras2(res.data[1]);
-          setNumGasolineras3(res.data[2]);
-          setNumGasolineras4(res.data[3]);
-          setNumGasolineras5(res.data[4]);
-          setNumGasolineras6(res.data[5]);
-          setNumGasolineras7(res.data[6]);
-          setNumGasolineras8(res.data[7]);
-          setNumGasolineras9(res.data[8]);
-          setNumGasolineras10(res.data[9]);
+            const res = await axios.get('http://localhost:3002/resaltados/getGasolineras');
+            setNumGasolineras1(res.data[0]);
+            setNumGasolineras2(res.data[1]);
+            setNumGasolineras3(res.data[2]);
+            setNumGasolineras4(res.data[3]);
+            setNumGasolineras5(res.data[4]);
+            setNumGasolineras6(res.data[5]);
+            setNumGasolineras7(res.data[6]);
+            setNumGasolineras8(res.data[7]);
+            setNumGasolineras9(res.data[8]);
+            setNumGasolineras10(res.data[9]);
 
 
         };
         fetchData();
-      }, []);
-      
+    }, []);
+
 
 
 
@@ -227,51 +232,64 @@ export default function BasicTable() {
 
             createDataPrecios('Gasolina 98 e5 más barato hoy', minGasolina98Today["provincia"], minGasolina98Today["municipio"], minGasolina98Today["localidad"],
                 minGasolina98Today["direccion"], minGasolina98Today["cp"], minGasolina98Today["rotulo"], minGasolina98Today["gasoleoA"], minGasolina98Today["gasoleoB"],
-                minGasolina98Today["gasoleoPremium"], minGasolina98Today["gasolina98e5"], minGasolina98Today["gasolina98e5"], minGasolina98Today["fecha"]),
+                minGasolina98Today["gasoleoPremium"], minGasolina98Today["gasolina95e5"], minGasolina98Today["gasolina98e5"], minGasolina98Today["fecha"]),
 
             createDataPrecios('Gasolina 98 e5 más barato historico', minGasolina98["provincia"], minGasolina98["municipio"], minGasolina98["localidad"],
                 minGasolina98["direccion"], minGasolina98["cp"], minGasolina98["rotulo"], minGasolina98["gasoleoA"], minGasolina98["gasoleoB"],
-                minGasolina98["gasoleoPremium"], minGasolina98["gasolina98e5"], minGasolina98["gasolina98e5"], minGasolina98["fecha"]),
+                minGasolina98["gasoleoPremium"], minGasolina98["gasolina95e5"], minGasolina98["gasolina98e5"], minGasolina98["fecha"]),
 
             createDataPrecios('Gasolina 98 e5 más caro hoy', maxGasolina98Today["provincia"], maxGasolina98Today["municipio"], maxGasolina98Today["localidad"],
                 maxGasolina98Today["direccion"], maxGasolina98Today["cp"], maxGasolina98Today["rotulo"], maxGasolina98Today["gasoleoA"], maxGasolina98Today["gasoleoB"],
-                maxGasolina98Today["gasoleoPremium"], maxGasolina98Today["gasolina98e5"], maxGasolina98Today["gasolina98e5"], maxGasolina98Today["fecha"]),
-
-            createDataPrecios('Gasolina 98 e5 más caro historico', maxGasolina98["provincia"], maxGasolina98["municipio"], maxGasolina98["localidad"],
+                maxGasolina98Today["gasoleoPremium"], maxGasolina98Today["gasolina95e5"], maxGasolina98Today["gasolina98e5"], maxGasolina98Today["fecha"]),
+            
+                createDataPrecios('Gasolina 98 e5 más caro historico', maxGasolina98["provincia"], maxGasolina98["municipio"], maxGasolina98["localidad"],
                 maxGasolina98["direccion"], maxGasolina98["cp"], maxGasolina98["rotulo"], maxGasolina98["gasoleoA"], maxGasolina98["gasoleoB"],
-                maxGasolina98["gasoleoPremium"], maxGasolina98["gasolina98e5"], maxGasolina98["gasolina98e5"], maxGasolina98["fecha"]),
+                maxGasolina98["gasoleoPremium"], maxGasolina98["gasolina95e5"], maxGasolina98["gasolina98e5"], maxGasolina98["fecha"]),
 
         ];
         setRowsPrecios(newRowsPrecios);
 
-    }, [minGasoilA, minGasoilB, minGasoilPremium, minGasolina95, minGasolina98])
+    }, [maxGasoilA, maxGasoilB, maxGasoilPremium,maxGasolina95 , maxGasolina98])
 
 
     useEffect(() => {
-        const newRowsGasolineras = [    
-          createDataGasolineras(numGasolineras1["ROTULO"], numGasolineras1["NUMERO_DE_GASOLINERAS"]),
-          createDataGasolineras(numGasolineras2["ROTULO"], numGasolineras2["NUMERO_DE_GASOLINERAS"]),
-          createDataGasolineras(numGasolineras3["ROTULO"], numGasolineras3["NUMERO_DE_GASOLINERAS"]),
-          createDataGasolineras(numGasolineras4["ROTULO"], numGasolineras4["NUMERO_DE_GASOLINERAS"]),
-          createDataGasolineras(numGasolineras5["ROTULO"], numGasolineras5["NUMERO_DE_GASOLINERAS"]),
-          createDataGasolineras(numGasolineras6["ROTULO"], numGasolineras6["NUMERO_DE_GASOLINERAS"]),
-          createDataGasolineras(numGasolineras7["ROTULO"], numGasolineras7["NUMERO_DE_GASOLINERAS"]),
-          createDataGasolineras(numGasolineras8["ROTULO"], numGasolineras8["NUMERO_DE_GASOLINERAS"]),
-          createDataGasolineras(numGasolineras9["ROTULO"], numGasolineras9["NUMERO_DE_GASOLINERAS"]),
-          createDataGasolineras(numGasolineras10["ROTULO"], numGasolineras10["NUMERO_DE_GASOLINERAS"]),
+        const newRowsGasolineras = [
+            createDataGasolineras(numGasolineras1["ROTULO"], numGasolineras1["NUMERO_DE_GASOLINERAS"]),
+            createDataGasolineras(numGasolineras2["ROTULO"], numGasolineras2["NUMERO_DE_GASOLINERAS"]),
+            createDataGasolineras(numGasolineras3["ROTULO"], numGasolineras3["NUMERO_DE_GASOLINERAS"]),
+            createDataGasolineras(numGasolineras4["ROTULO"], numGasolineras4["NUMERO_DE_GASOLINERAS"]),
+            createDataGasolineras(numGasolineras5["ROTULO"], numGasolineras5["NUMERO_DE_GASOLINERAS"]),
+            createDataGasolineras(numGasolineras6["ROTULO"], numGasolineras6["NUMERO_DE_GASOLINERAS"]),
+            createDataGasolineras(numGasolineras7["ROTULO"], numGasolineras7["NUMERO_DE_GASOLINERAS"]),
+            createDataGasolineras(numGasolineras8["ROTULO"], numGasolineras8["NUMERO_DE_GASOLINERAS"]),
+            createDataGasolineras(numGasolineras9["ROTULO"], numGasolineras9["NUMERO_DE_GASOLINERAS"]),
+            createDataGasolineras(numGasolineras10["ROTULO"], numGasolineras10["NUMERO_DE_GASOLINERAS"]),
         ];
         setRowsGasolineras(newRowsGasolineras);
-      }, [numGasolineras1]);
-      
+    }, [numGasolineras1]);
+
 
     return (
         <Box>
             <Header />
-            <CustomTablePrecios rows={rowsPrecios} title="Precios" />
-            <CustomTableGasolineras rows={rowsGasolineras} title="Gasolineras" />
-            <Box position={"flex"} bottom={0} minWidth={"100%"}>
-                <Footer />
+            <Box display={minGasolina98Today.length === 0 ? "none" : ""}>
+                <CustomTablePrecios rows={rowsPrecios} title="Precios" />
+                <CustomTableGasolineras rows={rowsGasolineras} title="Gasolineras" />
+                <Box position={"relative"} bottom={0} minWidth={"100%"} >
+                    <Footer />
+                </Box>
             </Box>
+            <Box display={minGasolina98Today.length === 0 ? "flex" : "none"}
+                sx={{ flexDirection: "column", alignItems: "center", marginTop:"10%" }}> 
+                <CircularProgress size={"7%"} />
+                <Typography sx={{marginTop:"1%"}}>Se esta cargando esta opción</Typography>
+                <Typography>Esta operacion puede tardar unos segundos</Typography>
+
+                <Box position={"absolute"} bottom={0} minWidth={"100%"} >
+                    <Footer />
+                </Box>
+            </Box>
+
         </Box>
     );
 }

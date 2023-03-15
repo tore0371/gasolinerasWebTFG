@@ -4,6 +4,7 @@
     "@material-ui/icons": "^4.11.3",
     "@material-ui/lab": "^4.0.0-alpha.61",
     "devextreme": "22.1.6",
+    "faker": "^6.6.6",
     "google-map-react": "^2.2.0",
     "leaflet": "^1.9.3",
     "material-ui-icons": "^1.0.0-beta.36",
