@@ -25,7 +25,12 @@ import Box from '@mui/material/Box';
     responsive: true
   }
 
-export default function barGraph(){
+export default function BarGraph(){
+
+  const [filterData, setFilterData] = useState({});
+
+
+
     return(
       <Box sx={{ height: "500px", width: "90%", marginBottom: "20px", marginTop: "2%", marginLeft: "5%", marginRight: "5%" }}>
         <Bar data={data} options={opciones} />

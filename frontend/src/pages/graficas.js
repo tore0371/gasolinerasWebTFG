@@ -18,11 +18,15 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import provincias from '../helpers/provincias'
 import getRotulos from '../helpers/rotulos'
-import BarGraph from '../components/barGraph';
+import BarGraph from '../components/graphs/barGraph';
+import LineGraph from '../components/graphs/lineGraph';
+import PieGraph from '../components/graphs/pieGraph';
+
 
 
 
 export default function Diario() {
+  const [provincia, setProvincia] = useState("");
   const [rotulos, setRotulos] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -32,7 +36,7 @@ export default function Diario() {
     async function fetchRotulos() {
       const rotulosArray = await getRotulos();
       setRotulos(rotulosArray);
-      console.log(rotulos)
+      // console.log(rotulos)
     }
     fetchRotulos();
   }, []);
@@ -53,24 +57,26 @@ export default function Diario() {
     <Container disableGutters sx={{ minWidth: "100%", height: "100%" }}>
 
       <Header />
-      <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '16px', justifyContent: "center", marginTop: "1%" }}>
+      <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '16px', justifyContent: "center", marginTop: "2%" }}>
         <Box>
-          <Typography>Seleccione una provincia:</Typography>
+          <Typography>Seleccione una provincia</Typography>
           <Autocomplete
             disablePortal
             id="combo-box-demo"
             options={provincias}
-            sx={{ width: 300 }}
+            sx={{ width: 300, marginTop: '3%' }}
             renderInput={(params) => <TextField {...params} label="Provincia" />}
+            onChange={(event, value) => setProvincia(value) && console.log(value)}
           />
         </Box>
         <Box>
           <Typography>Seleccione un rótulo</Typography>
           <Autocomplete
             disablePortal
+            disabled={!provincia}
             id="combo-box-demo"
             options={rotulos}
-            sx={{ width: 300 }}
+            sx={{ width: 300, marginTop: '3%' }}
             renderInput={(params) => <TextField {...params} label="Rótulo" />}
           />
         </Box>
@@ -78,6 +84,7 @@ export default function Diario() {
           <Typography>Fecha inicio</Typography>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
+              sx={{ marginTop: '3%' }}
               value={startDate}
               onChange={handleStartDateChange}
             />
@@ -87,6 +94,7 @@ export default function Diario() {
           <Typography>Fecha fin</Typography>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
+              sx={{ marginTop: '3%' }}
               value={endDate}
               onChange={handleEndDateChange}
             />
@@ -97,7 +105,10 @@ export default function Diario() {
         </Box>
       </Box>
 
-      <BarGraph/>
+      <BarGraph />
+      <LineGraph />
+      <PieGraph />
+
 
       <Box sx={{ marginTop: "60px", position: "relative" }}>
         <Footer />
