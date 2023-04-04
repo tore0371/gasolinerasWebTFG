@@ -13,7 +13,6 @@ import { Box, Typography } from '@mui/material';
 export default function CustomTable({ rows, title }) {
   return (
     <Box>
-      <Typography sx={{textAlign:"center", fontWeight:"bold", fontSize:"20px", mt:"1%"}}>{title}</Typography>
       <TableContainer component={Paper} sx={{mt:"2%"}}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>

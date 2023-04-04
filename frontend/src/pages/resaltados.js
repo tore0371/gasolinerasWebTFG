@@ -241,15 +241,15 @@ export default function BasicTable() {
             createDataPrecios('Gasolina 98 e5 más caro hoy', maxGasolina98Today["provincia"], maxGasolina98Today["municipio"], maxGasolina98Today["localidad"],
                 maxGasolina98Today["direccion"], maxGasolina98Today["cp"], maxGasolina98Today["rotulo"], maxGasolina98Today["gasoleoA"], maxGasolina98Today["gasoleoB"],
                 maxGasolina98Today["gasoleoPremium"], maxGasolina98Today["gasolina95e5"], maxGasolina98Today["gasolina98e5"], maxGasolina98Today["fecha"]),
-            
-                createDataPrecios('Gasolina 98 e5 más caro historico', maxGasolina98["provincia"], maxGasolina98["municipio"], maxGasolina98["localidad"],
+
+            createDataPrecios('Gasolina 98 e5 más caro historico', maxGasolina98["provincia"], maxGasolina98["municipio"], maxGasolina98["localidad"],
                 maxGasolina98["direccion"], maxGasolina98["cp"], maxGasolina98["rotulo"], maxGasolina98["gasoleoA"], maxGasolina98["gasoleoB"],
                 maxGasolina98["gasoleoPremium"], maxGasolina98["gasolina95e5"], maxGasolina98["gasolina98e5"], maxGasolina98["fecha"]),
 
         ];
         setRowsPrecios(newRowsPrecios);
 
-    }, [maxGasoilA, maxGasoilB, maxGasoilPremium,maxGasolina95 , maxGasolina98])
+    }, [maxGasoilA, maxGasoilB, maxGasoilPremium, maxGasolina95, maxGasolina98])
 
 
     useEffect(() => {
@@ -273,6 +273,14 @@ export default function BasicTable() {
         <Box>
             <Header />
             <Box display={minGasolina98Today.length === 0 ? "none" : ""}>
+                <Box sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
+                    <Typography sx={{ textAlign: "center", fontWeight: "bold", fontSize: "20px", mt: "1%" }}>
+                        Precios
+                    </Typography>
+                    <Typography sx={{ fontWeight: "bold" }}>Datos desde el dia: 20/11/2022</Typography>
+                </Box>
+
+
                 <CustomTablePrecios rows={rowsPrecios} title="Precios" />
                 <CustomTableGasolineras rows={rowsGasolineras} title="Gasolineras" />
                 <Box position={"relative"} bottom={0} minWidth={"100%"} >
@@ -280,9 +288,9 @@ export default function BasicTable() {
                 </Box>
             </Box>
             <Box display={minGasolina98Today.length === 0 ? "flex" : "none"}
-                sx={{ flexDirection: "column", alignItems: "center", marginTop:"10%" }}> 
+                sx={{ flexDirection: "column", alignItems: "center", marginTop: "10%" }}>
                 <CircularProgress size={"7%"} />
-                <Typography sx={{marginTop:"1%"}}>Se esta cargando esta opción</Typography>
+                <Typography sx={{ marginTop: "1%" }}>Se esta cargando esta opción</Typography>
                 <Typography>Esta operacion puede tardar unos segundos</Typography>
 
                 <Box position={"absolute"} bottom={0} minWidth={"100%"} >

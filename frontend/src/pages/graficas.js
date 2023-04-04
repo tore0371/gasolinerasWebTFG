@@ -6,21 +6,27 @@ import { Pie } from 'react-chartjs-2'
 import { Bar } from 'react-chartjs-2'
 // import { Line } from 'react-chartjs-2'
 
-
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Chart as ChartJS } from 'chart.js/auto'
 import { Chart } from 'react-chartjs-2'
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import { Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import provincias from '../helpers/provincias'
 import getRotulos from '../helpers/rotulos'
+import BarGraph from '../components/barGraph';
 
 
 
 export default function Diario() {
   const [rotulos, setRotulos] = useState([]);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+
 
   useEffect(() => {
     async function fetchRotulos() {
@@ -31,84 +37,68 @@ export default function Diario() {
     fetchRotulos();
   }, []);
 
-  const data = {
-    labels: ['Estados Unidos', 'Mexico', 'Italia', 'Colombia', 'España'],
-    datasets: [
-      {
-        label: 'Habitantes',
-        backgroundColor: ['red', 'blue', 'green', 'yellow', 'pink'],
-        borderColor: '#ffffff',
-        borderWidth: 1,
-        hoverBackgroundColor: 'rgba(24,118,210,0.2)',
-        hoverBorderColor: 'white',
-        data: [327.16, 126.19, 60.43, 49.64, 46.72]
-      },
-      {
-        label: 'precios',
-        backgroundColor: ['red', 'blue', 'green', 'yellow', 'pink'],
-        borderColor: '#ffffff',
-        borderWidth: 1,
-        hoverBackgroundColor: 'rgba(24,118,210,0.2)',
-        hoverBorderColor: 'white',
-        data: [123, 112, 323, 123, 213]
-      },
 
 
-    ]
+
+
+  const handleStartDateChange = (date) => {
+    setStartDate(date);
   };
 
-  const opciones = {
-    maintainAspectRatio: false,
-    responsive: true
-  }
-
-
-
+  const handleEndDateChange = (date) => {
+    setEndDate(date);
+  };
 
   return (
     <Container disableGutters sx={{ minWidth: "100%", height: "100%" }}>
 
       <Header />
-      <Box>Provincia dia rangoDePrecios </Box>
-
-
-      <Box>
-        <Paper>
-          <Typography sx={{ fontSize: "20px" }}>
-            Seleccione una gasolinera
-          </Typography>
-          <Box>
-            <Typography>Seleccione una provincia:</Typography>
-            <Autocomplete
-              disablePortal
-              id="combo-box-demo"
-              options={provincias}
-              sx={{ width: 300 }}
-              renderInput={(params) => <TextField {...params} label="Provincia" />}
+      <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '16px', justifyContent: "center", marginTop: "1%" }}>
+        <Box>
+          <Typography>Seleccione una provincia:</Typography>
+          <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={provincias}
+            sx={{ width: 300 }}
+            renderInput={(params) => <TextField {...params} label="Provincia" />}
+          />
+        </Box>
+        <Box>
+          <Typography>Seleccione un rótulo</Typography>
+          <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={rotulos}
+            sx={{ width: 300 }}
+            renderInput={(params) => <TextField {...params} label="Rótulo" />}
+          />
+        </Box>
+        <Box>
+          <Typography>Fecha inicio</Typography>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              value={startDate}
+              onChange={handleStartDateChange}
             />
-          </Box>
-          <Box>
-            <Typography>Seleccione un rótulo</Typography>
-            <Autocomplete
-              disablePortal
-              id="combo-box-demo"
-              options={rotulos}
-              sx={{ width: 300 }}
-              renderInput={(params) => <TextField {...params} label="Provincia" />}
+          </LocalizationProvider>
+        </Box>
+        <Box>
+          <Typography>Fecha fin</Typography>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              value={endDate}
+              onChange={handleEndDateChange}
             />
-          </Box>
-        </Paper>
+          </LocalizationProvider>
+        </Box>
+        <Box sx={{ marginTop: "1%" }}>
+          <Button variant="contained">Filtrar</Button>
+        </Box>
       </Box>
 
-      <Box sx={{ height: "500px", width: "90%", marginBottom: "20px", marginTop: "2%", marginLeft: "5%", marginRight: "5%" }}>
-        <Bar data={data} options={opciones} />
-      </Box>
-      <Box sx={{ height: "500px", width: "90%", marginBottom: "20px", marginTop: "2%", marginLeft: "5%", marginRight: "5%" }}>
-        <Bar data={data} options={opciones} />
-      </Box>
-      <Box sx={{ height: "500px", width: "90%", marginBottom: "20px", marginTop: "2%", marginLeft: "5%", marginRight: "5%" }}>
-        <Bar data={data} options={opciones} />
-      </Box>
+      <BarGraph/>
+
       <Box sx={{ marginTop: "60px", position: "relative" }}>
         <Footer />
       </Box>
