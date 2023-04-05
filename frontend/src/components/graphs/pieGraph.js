@@ -25,14 +25,10 @@ const data = {
     }]
   };
 
-
 const opciones = {
     maintainAspectRatio: false,
     responsive: true
   }
-
-
-
 
 export default function PieGraph() {
     return (

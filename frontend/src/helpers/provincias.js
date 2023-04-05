@@ -1,55 +1,22 @@
-const provincias = [
-    "Álava",
-    "Albacete",
-    "Alicante",
-    "Almería",
-    "Asturias",
-    "Ávila",
-    "Badajoz",
-    "Barcelona",
-    "Burgos",
-    "Cáceres",
-    "Cádiz",
-    "Cantabria",
-    "Castellón",
-    "Ciudad Real",
-    "Córdoba",
-    "Cuenca",
-    "Gerona",
-    "Granada",
-    "Guadalajara",
-    "Guipúzcoa",
-    "Huelva",
-    "Huesca",
-    "Islas Baleares",
-    "Jaén",
-    "La Coruña",
-    "La Rioja",
-    "Las Palmas",
-    "León",
-    "Lérida",
-    "Lugo",
-    "Madrid",
-    "Málaga",
-    "Murcia",
-    "Navarra",
-    "Orense",
-    "Palencia",
-    "Pontevedra",
-    "Salamanca",
-    "Santa Cruz de Tenerife",
-    "Segovia",
-    "Sevilla",
-    "Soria",
-    "Tarragona",
-    "Teruel",
-    "Toledo",
-    "Valencia",
-    "Valladolid",
-    "Vizcaya",
-    "Zamora",
-    "Zaragoza"
-  ];
-  
+import axios from 'axios'
 
-  export default provincias;
+const getProvincias = async () =>{
+  try{  
+    const response = await axios.get(' http://localhost:3002/graficas/getProvincias');
+    const provinciasArray = [];
+    for (let i = 0; i < response.data.length; i++) {
+      if(response.data[i]["provincia"].includes("/")){
+        if(response.data[i]["provincia"].includes("ARABA")){
+          provinciasArray.push(response.data[i]["provincia"].split("/")[1]);
+        }else{
+          provinciasArray.push(response.data[i]["provincia"].split("/")[0]);
+        }
+      }else provinciasArray.push(response.data[i]["provincia"])
+    }
+    return provinciasArray;
+  }catch (err) {
+    console.log(err)
+  }
+}
+
+export default getProvincias;

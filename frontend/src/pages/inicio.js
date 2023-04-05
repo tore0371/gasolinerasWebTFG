@@ -11,6 +11,10 @@ import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "@emotion/react";
 import Footer from "../layouts/Footer";
 import Header from "../layouts/Header"
+import Alert from '@mui/material/Alert';
+import IconButton from '@mui/material/IconButton';
+import Collapse from '@mui/material/Collapse';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 const styles = {
@@ -40,12 +44,34 @@ const theme = createTheme({
 
 export default function Inicio() {
   let navigate = useNavigate();
+  const [open, setOpen] = React.useState(true);
+
 
   return (
     <Box>
       <Paper style={styles.paperContainer}>
 
         <Header />
+        <Collapse in={open}>
+          <Alert
+            severity="info"
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setOpen(false);
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
+            sx={{ mb: 2 }}
+          >
+            En esta página web no se recopila ningun tipo de dato del usuario
+          </Alert>
+        </Collapse>
         <Box
           sx={{
             display: "flex",
@@ -62,16 +88,15 @@ export default function Inicio() {
               <Typography variant="texto" component="h2" gutterBottom>
                 {"Tramiento de datos de gasolineras a nivel Nacional."}
               </Typography>
-              <Typography component={"h3"} sx={{color:"white"}}>No se recopila ningun tipo de dato del usuario</Typography>
             </ThemeProvider>
             <Button
               style={{
                 backgroundColor: "white",
                 color: "black",
                 borderRadius: 20,
-                marginTop:"2%"
+                marginTop: "2%"
               }}
-              onClick={(e) => navigate("/diario")}
+              onClick={(e) => navigate("/graficas")}
               variant="contained"
             >
               Comencemos

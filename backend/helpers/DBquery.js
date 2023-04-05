@@ -588,11 +588,20 @@ const getNumGasolineras = async function () {
 
 // devuelve todos los diferentes rotulos que de los que se disponen en 
 // la base de datos
-const getRotulos = async function (){
+const getRotulos = async function (provincia){
     var data = await sequelize.query(
-        "SELECT distinct ROTULO from gasolineras"
+        "SELECT distinct ROTULO from gasolineras\
+        where PROVINCIA LIKE '%" + provincia+ "%'"
     )
     return data[0]
+}
+
+
+const getProvincias = async function(){
+    var data = await sequelize.query(
+        "select distinct provincia from gasolineras"
+    )
+    return data[0];
 }
 
 export {
@@ -621,7 +630,8 @@ export {
     getTodayExpensiveGasolina98Price,
     getMaxGasolina98Price,
     getNumGasolineras,
-    getRotulos
+    getRotulos,
+    getProvincias
 
 
 }

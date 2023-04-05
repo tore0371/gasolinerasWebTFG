@@ -1,13 +1,17 @@
 import express from 'express'
-import getRotulos from '../controllers/graficas.controller.js'
+import {getRotulos} from '../controllers/graficas.controller.js'
+import {getProvincias} from '../controllers/graficas.controller.js'
 
 const router = express.Router()
 
 
 router
-    .route('/getRotulos')
+    .route('/getRotulos/:provincia')
     .get(getRotulos)
 
+router
+    .route('/getProvincias')
+    .get(getProvincias)
 
-
+    
 export default router
