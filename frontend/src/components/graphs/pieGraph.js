@@ -5,32 +5,33 @@ import { Chart } from 'react-chartjs-2'
 import { Pie } from 'react-chartjs-2'
 import Box from '@mui/material/Box';
 
+export default function PieGraph({rows}) {
+// console.log("*************")
+// console.log(rows[0].name)
+// console.log("*************")
 
 
 const data = {
-    labels: [
-      'Red',
-      'Blue',
-      'Yellow'
+  labels: rows.map((row) => (row.name)),
+  datasets: [{
+    label: 'Numero de gasolineras',
+    data: rows.map((row) => (row.numero)),
+    backgroundColor: [
+      'rgb(0, 0, 139)',
+      'rgb(25, 25, 172)',
+      'rgb(65, 105, 225)',
+      'rgb(70, 130, 180)',
+      'rgb(135, 206, 235)'
+
     ],
-    datasets: [{
-      label: 'My First Dataset',
-      data: [300, 50, 100],
-      backgroundColor: [
-        'rgb(255, 99, 132)',
-        'rgb(54, 162, 235)',
-        'rgb(255, 205, 86)'
-      ],
-      hoverOffset: 4
-    }]
-  };
+    hoverOffset: 4
+  }]
+};
 
 const opciones = {
-    maintainAspectRatio: false,
-    responsive: true
-  }
-
-export default function PieGraph() {
+  maintainAspectRatio: false,
+  responsive: true
+}
     return (
         <Box sx={{ height: "500px", width: "90%", marginBottom: "20px", marginTop: "2%", marginLeft: "5%", marginRight: "5%" }}>
             <Pie data={data} options={opciones} />

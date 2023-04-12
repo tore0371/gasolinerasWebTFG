@@ -5,31 +5,49 @@ import { Chart } from 'react-chartjs-2'
 import { Bar } from 'react-chartjs-2'
 import Box from '@mui/material/Box';
 
+
+
+export default function BarGraph({rows}){
+  console.log("Estoy en la grafifca")
+  console.log(rows)
+  console.log("Estoy en la grafifca")
+
   const data = {
-    labels: ['Estados Unidos', 'Mexico', 'Italia', 'Colombia', 'España'],
+    labels: rows.map((row) => (row[0])),
     datasets: [
       {
-        label: 'Precios',
-        backgroundColor: ['#1976d2'],
-        borderColor: '#ffffff',
-        borderWidth: 1,
-        hoverBackgroundColor: 'rgba(24,118,210,0.2)',
-        hoverBorderColor: 'white',
-        data: [327.16, 126.19, 60.43, 49.64, 46.72]
+        label: 'Gasolina 95',
+        backgroundColor: 'rgb(0, 0, 139)',
+        data: rows.map((row) => (row[1])),
       },
+      {
+        label: 'Gasolina 98',
+        backgroundColor: 'rgb(25, 25, 172)',
+        data: rows.map((row) => (row[2])),
+      },
+      {
+        label: 'Gasoleo A',
+        backgroundColor: 'rgb(65, 105, 225)',
+        data: rows.map((row) => (row[3])),
+      },
+      {
+        label: 'Gasoleo B',
+        backgroundColor: 'rgb(70, 130, 180)',
+        data: rows.map((row) => (row[4])),
+      },
+      {
+        label: 'Gasoleo Premium',
+        backgroundColor: 'rgb(135, 206, 235)',
+        data: rows.map((row) => (row[5]))
+      }
     ]
   };
-
-  const opciones = {
-    maintainAspectRatio: false,
-    responsive: true
-  }
-
-export default function BarGraph(){
-
-  const [filterData, setFilterData] = useState({});
-
-
+  
+  
+    const opciones = {
+      maintainAspectRatio: false,
+      responsive: true
+    }
 
     return(
       <Box sx={{ height: "500px", width: "90%", marginBottom: "20px", marginTop: "2%", marginLeft: "5%", marginRight: "5%" }}>

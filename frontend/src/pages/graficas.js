@@ -21,17 +21,47 @@ import getRotulos from '../helpers/rotulos'
 import BarGraph from '../components/graphs/barGraph';
 import LineGraph from '../components/graphs/lineGraph';
 import PieGraph from '../components/graphs/pieGraph';
+import axios from "axios";
+import dayjs from 'dayjs';
+import esLocale from 'dayjs/locale/es';
+import Alert from '@mui/material/Alert';
+import IconButton from '@mui/material/IconButton';
+import Collapse from '@mui/material/Collapse';
+import CloseIcon from '@mui/icons-material/Close';
 
+function createDataGasolineras(name, numero) {
+  return {
+    name, numero
+  };
+}
 
+function createDataGasolinerasBar(mes_y_anio, gasolina95_e5, gasolina95e5, gasoleoA, gasoleoB, gasoleoPremium) {
+  return {
+    mes_y_anio, gasolina95_e5, gasolina95e5, gasoleoA, gasoleoB, gasoleoPremium
+  };
+}
 
 
 export default function Diario() {
-  const [listaProvincias, setListaProvincias] = useState([])
 
-  const [provinciaBar, setProvinciaBar] = useState("");
-  const [rotulosBar, setRotulosBar] = useState([]);
+  dayjs.locale('es')
+  const [openBar, setOpenBar] = React.useState(false);
+
+
+  const [listaProvincias, setListaProvincias] = useState([])
+  const [rotulosBarList, setRotulosBarList] = useState([]);
+
+  const [provinciaBar, setProvinciaBar] = useState("CASTELLÓN");
+  const [rotulosBar, setRotulosBar] = useState("CEPSA")
+
   const [startDateBar, setStartDateBar] = useState(null);
   const [endDateBar, setEndDateBar] = useState(null);
+
+  const [resposneBarAxios, setResposneBarAxios] = ([]);
+
+  const [errorBar, setErrorBar] = useState(false)
+
+
 
   const [provinciaLine, setProvinciaLine] = useState("");
   const [rotulosLine, setRotulosLine] = useState([]);
@@ -39,69 +69,207 @@ export default function Diario() {
   const [endDateLine, setEndDateLine] = useState(null);
 
 
-  const [provinciaPie, setProvinciaPie] = useState("");
+  const [provinciaPie, setProvinciaPie] = useState("CASTELLÓN"); // valor por defecto
   const [rotulosPie, setRotulosPie] = useState([]);
   const [startDatePie, setStartDatePie] = useState(null);
   const [endDatePie, setEndDatePie] = useState(null);
 
 
+  const [dataGraphLine, setDataGraphLine] = useState([])
+
+
+  const [numGasolineras1, setNumGasolineras1] = useState([])
+  const [numGasolineras2, setNumGasolineras2] = useState([])
+  const [numGasolineras3, setNumGasolineras3] = useState([])
+  const [numGasolineras4, setNumGasolineras4] = useState([])
+  const [numGasolineras5, setNumGasolineras5] = useState([])
+
+  const [rowsGasolineras, setRowsGasolineras] = useState([])
+  const [rowsBarGraph, setRowsBarGraph] = useState([])
+
+
+
   useEffect(() => {
     async function fetchProvincias() {
       const provinciasArray = await getProvincias();
-      console.log("entre")
-      console.log(provinciasArray)
+
       setListaProvincias(provinciasArray);
-      // console.log(rotulos)
     }
     fetchProvincias();
   }, []);
+
+  useEffect(() => {
+    async function fetchPieData() {
+      let res = null;
+      if (provinciaPie != "") {
+        res = await axios.get('http://localhost:3002/graficas/getPieData/' + provinciaPie);
+      } else {
+        res = await axios.get('http://localhost:3002/graficas/getPieData/' + 'CASTELLÓN');
+      }
+
+      setNumGasolineras1(res.data[0]);
+      setNumGasolineras2(res.data[1]);
+      setNumGasolineras3(res.data[2]);
+      setNumGasolineras4(res.data[3]);
+      setNumGasolineras5(res.data[4]);
+
+    }
+    fetchPieData();
+  }, [provinciaPie]);
+
+
+  useEffect(() => {
+    async function fetchBarData() {
+      console.log(provinciaBar)
+      console.log(rotulosBar)
+      console.log(startDateBar)
+      console.log(endDateBar)
+
+      if (provinciaBar == "" || rotulosBar == "" || startDateBar == null || endDateBar == null) {
+        console.log("+")
+
+        axios.post('http://localhost:3002/graficas/getBarData', {
+          provincia: "CASTELLÓN",
+          rotulosBar: "CEPSA",
+          startDate: '2023-01-31T23:00:00.000Z',
+          endDate: '2023-03-31T22:00:00.000Z'
+        })
+          .then(function (res) {
+            console.log(res.data);
+            const newRowsGasolineras = [];
+            // Aquí iteramos a través de res
+            for (let i = 0; i < res.data.length; i++) {
+              console.log("************")
+              console.log(i)
+              console.log(res.data[i]["MES_Y_ANIO"])
+              newRowsGasolineras.push([res.data[i]["MES_Y_ANIO"], res.data[i]["PRECIO_MEDIO_GASOLINA95_E5"], res.data[i]["PRECIO_MEDIO_GASOLINA98_E5"], res.data[i]["PRECIO_GASOLEO_A"], res.data[i]["PRECIO_GASOLEO_B"], res.data[i]["PRECIO_GASOLEO_PREMIUM"]])
+            }
+            setRowsBarGraph(newRowsGasolineras)
+            console.log("A ver que pasa")
+            console.log(newRowsGasolineras)
+            console.log("Esto paso")
+
+
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    }
+    fetchBarData();
+  }, [])
+
+
+
+
+
+
+  useEffect(() => {
+    const newRowsGasolineras = [
+      createDataGasolineras(numGasolineras1["ROTULO"], numGasolineras1["NUMERO_DE_GASOLINERAS"]),
+      createDataGasolineras(numGasolineras2["ROTULO"], numGasolineras2["NUMERO_DE_GASOLINERAS"]),
+      createDataGasolineras(numGasolineras3["ROTULO"], numGasolineras3["NUMERO_DE_GASOLINERAS"]),
+      createDataGasolineras(numGasolineras4["ROTULO"], numGasolineras4["NUMERO_DE_GASOLINERAS"]),
+      createDataGasolineras(numGasolineras5["ROTULO"], numGasolineras5["NUMERO_DE_GASOLINERAS"]),
+    ];
+    setRowsGasolineras(newRowsGasolineras);
+  }, [numGasolineras1]);
+
 
 
 
   async function getRotulosFunctBar(provincia) {
     const rotulosArrayBar = await getRotulos(provincia);
-    setRotulosBar(rotulosArrayBar);
-  }
-  async function getRotulosFunctLine(provincia) {
-    const rotulosArrayLine = await getRotulos(provincia);
-    setRotulosLine(rotulosArrayLine);
-  }
-  async function getRotulosFunctPie(provincia) {
-    const rotulosArrayPie = await getRotulos(provincia);
-    setRotulosPie(rotulosArrayPie);
+    setRotulosBarList(rotulosArrayBar);
   }
 
 
+  const minSelectableDate = dayjs("2022-12-01");
 
-  const handleStartDateChangeBar = (date) => {
-    setStartDateBar(date);
-  };
 
-  const handleEndDateChangeBar = (date) => {
-    setEndDateBar(date);
-  };
-
-  const handleStartDateChangeLine = (date) => {
-    setStartDateLine(date);
-  };
-
-  const handleEndDateChangeLine = (date) => {
-    setEndDateLine(date);
-  };
-  const handleStartDateChangePie = (date) => {
-    setStartDatePie(date);
+  const maxSelectableDate = dayjs().startOf('month');
+  const handleStartDateChangeBar = (newDate) => {
+    // Establecer la nueva fecha de inicio y validar que sea anterior a la fecha de finalización
+    setStartDateBar(newDate);
+    if (endDateBar && newDate > endDateBar) {
+      setEndDateBar(newDate);
+    }
   };
 
-  const handleEndDateChangePie = (date) => {
-    setEndDatePie(date);
+  const handleEndDateChangeBar = (newDate) => {
+    // Establecer la nueva fecha de finalización y validar que sea posterior a la fecha de inicio
+    setEndDateBar(newDate);
+    if (startDateBar && newDate < startDateBar) {
+      setEndDateBar(newDate);
+    }
   };
+
 
 
   const handleChangeProvinciaBar = (provincia) => {
     setProvinciaBar(provincia);
-    console.log(provincia)
-    getRotulosFunctBar(provincia)
+    getRotulosFunctBar(provincia);
+    setRotulosBar("")
   }
+
+  const handleChangeRotuloBar = (rotulo) => {
+    setRotulosBar(rotulo);
+  }
+
+  const handleChangeProvinciaPie = (provincia) => {
+    setProvinciaPie(provincia);
+  }
+
+  const handleFiltrarBar = () => {
+    // console.log(provinciaBarList)
+    console.log("********")
+    console.log(startDateBar)
+    // console.log(endDateBar)
+    console.log("********")
+    if (provinciaBar != "" && rotulosBar != "" && startDateBar != null && endDateBar != null) {
+      //aqui realizamos la accion
+      setOpenBar(false);
+      //hacemos la peticion axios
+      async function fetchPieData() {
+        let res = null;
+        axios.post('http://localhost:3002/graficas/getBarData', {
+          provincia: provinciaBar,
+          rotulosBar: rotulosBar,
+          startDate: startDateBar["$d"],
+          endDate: endDateBar["$d"]
+        })
+        .then(function (res) {
+          console.log(res.data);
+          const newRowsGasolineras = [];
+          // Aquí iteramos a través de res
+          for (let i = 0; i < res.data.length; i++) {
+            console.log("************")
+            console.log(i)
+            console.log(res.data[i]["MES_Y_ANIO"])
+            newRowsGasolineras.push([res.data[i]["MES_Y_ANIO"], res.data[i]["PRECIO_MEDIO_GASOLINA95_E5"], res.data[i]["PRECIO_MEDIO_GASOLINA98_E5"], res.data[i]["PRECIO_GASOLEO_A"], res.data[i]["PRECIO_GASOLEO_B"], res.data[i]["PRECIO_GASOLEO_PREMIUM"]])
+          }
+          setRowsBarGraph(newRowsGasolineras)
+          console.log("A ver que pasa")
+          console.log(newRowsGasolineras)
+          console.log("Esto paso")
+
+
+        })
+          .catch(function (error) {
+            console.log(error);
+          });
+
+      }
+      fetchPieData()
+    } else {
+      //sacamos error
+      setOpenBar(true);
+      console.log("error")
+    }
+  }
+
+
+
 
   return (
     <Container disableGutters sx={{ minWidth: "100%", height: "100%" }}>
@@ -119,6 +287,8 @@ export default function Diario() {
             id="combo-box-demo"
             options={listaProvincias}
             sx={{ width: 300, marginTop: '3%' }}
+            value={provinciaBar} // valor inicial
+
             renderInput={(params) => <TextField {...params} label="Provincia" />}
             onChange={(event, value) => handleChangeProvinciaBar(value)}
           />
@@ -129,36 +299,79 @@ export default function Diario() {
             disablePortal
             disabled={!provinciaBar}
             id="combo-box-demo"
-            options={rotulosBar}
+            options={rotulosBarList}
+            value={rotulosBar}
             sx={{ width: 300, marginTop: '3%' }}
             renderInput={(params) => <TextField {...params} label="Rótulo" />}
+            onChange={(event, value) => handleChangeRotuloBar(value)}
+
+
+
           />
         </Box>
         <Box>
           <Typography>Mes inicio</Typography>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
             <DatePicker
               sx={{ marginTop: '3%' }}
-              value={startDateBar}
+              disableFuture
+              views={['year', 'month']}
+              defaultValue={dayjs('2022-12-17')}
+              // value={startDateBar}
+
               onChange={handleStartDateChangeBar}
+              minDate={minSelectableDate}
+              maxDate={maxSelectableDate}
+              renderInput={(params) => <TextField {...params} />}
             />
           </LocalizationProvider>
         </Box>
         <Box>
           <Typography>Mes fin</Typography>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
             <DatePicker
               sx={{ marginTop: '3%' }}
-              value={endDateBar}
+              disableFuture
+              views={['year', 'month']}
+              defaultValue={dayjs('2023-03-17')}
               onChange={handleEndDateChangeBar}
+              minDate={minSelectableDate}
+              maxDate={maxSelectableDate}
+              renderInput={(params) => <TextField {...params} />}
             />
           </LocalizationProvider>
         </Box>
         <Box sx={{ marginTop: "1%" }}>
-          <Button variant="contained">Filtrar</Button>
+          <Button variant="contained"
+            onClick={handleFiltrarBar}>
+            Filtrar
+          </Button>
         </Box>
       </Box>
-      <BarGraph />
+      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", mt: "0.8%" }}>
+        <Collapse in={openBar}>
+
+          <Alert
+            severity="error"
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setOpenBar(false);
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
+            sx={{ mb: 2 }}
+          >
+            Es obligatorio rellenar todos los campos
+          </Alert>
+        </Collapse>
+      </Box>
+      <BarGraph rows={rowsBarGraph} />
       <Typography
         sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "1%", fontWeight: "bold", fontSize: "180%" }}>
         Precios diarios filtrados por estación
@@ -181,7 +394,7 @@ export default function Diario() {
             disablePortal
             disabled={!provinciaBar}
             id="combo-box-demo"
-            options={rotulosBar}
+            options={rotulosBarList}
             sx={{ width: 300, marginTop: '3%' }}
             renderInput={(params) => <TextField {...params} label="Rótulo" />}
           />
@@ -225,45 +438,15 @@ export default function Diario() {
             options={listaProvincias}
             sx={{ width: 300, marginTop: '3%' }}
             renderInput={(params) => <TextField {...params} label="Provincia" />}
-            onChange={(event, value) => handleChangeProvinciaBar(value)}
+            value={provinciaPie} // valor inicial
+            onChange={(event, value) => handleChangeProvinciaPie(value)}
           />
-        </Box>
-        <Box>
-          <Typography>Seleccione un rótulo</Typography>
-          <Autocomplete
-            disablePortal
-            disabled={!provinciaBar}
-            id="combo-box-demo"
-            options={rotulosBar}
-            sx={{ width: 300, marginTop: '3%' }}
-            renderInput={(params) => <TextField {...params} label="Rótulo" />}
-          />
-        </Box>
-        <Box>
-          <Typography>Mes inicio</Typography>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              sx={{ marginTop: '3%' }}
-              value={startDateBar}
-              onChange={handleStartDateChangeBar}
-            />
-          </LocalizationProvider>
-        </Box>
-        <Box>
-          <Typography>Mes fin</Typography>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              sx={{ marginTop: '3%' }}
-              value={endDateBar}
-              onChange={handleEndDateChangeBar}
-            />
-          </LocalizationProvider>
         </Box>
         <Box sx={{ marginTop: "1%" }}>
           <Button variant="contained">Filtrar</Button>
         </Box>
       </Box>
-      <PieGraph />
+      <PieGraph rows={rowsGasolineras} />
 
 
       <Box sx={{ marginTop: "60px", position: "relative" }}>

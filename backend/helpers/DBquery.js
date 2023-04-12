@@ -470,6 +470,8 @@ const getMaxGasolina95Price = async function () {
     return data[0]
 }
 
+
+
 const getTodayMinGasolina98TodayPrice = async function (todayDate, tomorrowDate) {
     var data = await sequelize.query(
         "SELECT TOP 1 *\
@@ -588,20 +590,70 @@ const getNumGasolineras = async function () {
 
 // devuelve todos los diferentes rotulos que de los que se disponen en 
 // la base de datos
-const getRotulos = async function (provincia){
+const getRotulos = async function (provincia) {
     var data = await sequelize.query(
         "SELECT distinct ROTULO from gasolineras\
-        where PROVINCIA LIKE '%" + provincia+ "%'"
+        where PROVINCIA LIKE '%" + provincia + "%'"
     )
     return data[0]
 }
 
 
-const getProvincias = async function(){
+const getProvincias = async function () {
     var data = await sequelize.query(
         "select distinct provincia from gasolineras"
     )
     return data[0];
+}
+
+
+const getNumGasolinerasGraph = async function (provincia) {
+    var data = await sequelize.query(
+        "SELECT TOP 5 ROTULO, COUNT(*) AS NUMERO_DE_GASOLINERAS\
+            FROM GASOLINERAS\
+            where PROVINCIA LIKE '%" + provincia + "%'\
+            GROUP BY ROTULO\
+            ORDER BY COUNT(*) DESC;"
+    )
+    return data[0]
+}
+
+
+const getPricesBarGraph = async function (provincia, rotulo, firstDateSQL, lastDateSQL) {
+    var data = await sequelize.query(
+        "SELECT \
+        CASE DATENAME(MONTH, FECHA)\
+            WHEN 'January' THEN 'Enero'\
+            WHEN 'February' THEN 'Febrero'\
+            WHEN 'March' THEN 'Marzo' \
+            WHEN 'April' THEN 'Abril' \
+            WHEN 'May' THEN 'Mayo' \
+            WHEN 'June' THEN 'Junio' \
+            WHEN 'July' THEN 'Julio' \
+            WHEN 'August' THEN 'Agosto' \
+            WHEN 'September' THEN 'Septiembre' \
+            WHEN 'October' THEN 'Octubre' \
+            WHEN 'November' THEN 'Noviembre' \
+            WHEN 'December' THEN 'Diciembre' \
+        END + ' ' + CAST(YEAR(FECHA) AS VARCHAR(4)) AS MES_Y_ANIO, \
+        ROUND(AVG(PRECIO_GASOLINA_95_E5), 2) AS PRECIO_MEDIO_GASOLINA95_E5,\
+        ROUND(AVG(PRECIO_GASOLINA_98_E5), 2) AS PRECIO_MEDIO_GASOLINA98_E5, \
+        ROUND(AVG(PRECIO_GASOLEO_A), 2) AS PRECIO_GASOLEO_A, \
+        ROUND(AVG(PRECIO_GASOLEO_B), 2) AS PRECIO_GASOLEO_B, \
+        ROUND(AVG(PRECIO_GASOLEO_PREMIUM), 2) AS PRECIO_GASOLEO_PREMIUM \
+    FROM \
+        GASOLINERAS \
+        INNER JOIN DATA_GASOLINERAS ON GASOLINERAS.ID_GASOLINERA = DATA_GASOLINERAS.ID_GASOLINERA \
+    WHERE \
+        GASOLINERAS.PROVINCIA LIKE '%" + provincia + "%' AND \
+        GASOLINERAS.ROTULO LIKE '%" + rotulo + "%' AND \
+        FECHA >= '" + firstDateSQL + "' AND \
+        FECHA <= '" + lastDateSQL + "' \
+    GROUP BY \
+        DATENAME(MONTH, FECHA), YEAR(FECHA) \
+    "
+    )
+    return data[0]
 }
 
 export {
@@ -631,7 +683,7 @@ export {
     getMaxGasolina98Price,
     getNumGasolineras,
     getRotulos,
-    getProvincias
-
-
+    getProvincias,
+    getNumGasolinerasGraph,
+    getPricesBarGraph
 }

@@ -7,6 +7,10 @@ import resaltadosRoute from './routes/resaltados.route.js'
 import graficasRoute from './routes/graficas.route.js'
 import cors from 'cors';
 
+const app = express();
+
+app.use(express.json());
+
 
 try {
   await sequelize.authenticate()
@@ -15,7 +19,6 @@ try {
   console.error('Unable to connect to the database:', error)
 }
 
-var app = express();
 app.use(cors());
 
 
