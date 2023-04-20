@@ -651,6 +651,7 @@ const getPricesBarGraph = async function (provincia, rotulo, firstDateSQL, lastD
         FECHA <= '" + lastDateSQL + "' \
     GROUP BY \
         DATENAME(MONTH, FECHA), YEAR(FECHA) \
+    ORDER BY MES_Y_ANIO asc\
     "
     )
     return data[0]

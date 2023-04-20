@@ -57,9 +57,7 @@ export default function Diario() {
   const [startDateBar, setStartDateBar] = useState(null);
   const [endDateBar, setEndDateBar] = useState(null);
 
-  const [resposneBarAxios, setResposneBarAxios] = ([]);
 
-  const [errorBar, setErrorBar] = useState(false)
 
 
 
@@ -131,7 +129,7 @@ export default function Diario() {
         axios.post('http://localhost:3002/graficas/getBarData', {
           provincia: "CASTELLÓN",
           rotulosBar: "CEPSA",
-          startDate: '2023-01-31T23:00:00.000Z',
+          startDate: '2022-12-31T23:00:00.000Z',
           endDate: '2023-03-31T22:00:00.000Z'
         })
           .then(function (res) {
@@ -142,6 +140,40 @@ export default function Diario() {
               console.log("************")
               console.log(i)
               console.log(res.data[i]["MES_Y_ANIO"])
+              const dateStart = new Date('2022-12-31T00:00:00');
+              const objDateStart = {
+                $D: dateStart.getDate(),
+                $H: dateStart.getHours(),
+                $L: 'es',
+                $M: dateStart.getMonth(),
+                $W: dateStart.getDay(),
+                $d: dateStart,
+                $m: dateStart.getMinutes(),
+                $ms: dateStart.getMilliseconds(),
+                $s: dateStart.getSeconds(),
+                $u: undefined,
+                $x: {},
+                $y: dateStart.getFullYear()
+              };
+              setStartDateBar(objDateStart);
+
+              const dateEnd = new Date('2022-12-31T00:00:00');
+              const objDateEnd = {
+                $D: dateEnd.getDate(),
+                $H: dateEnd.getHours(),
+                $L: 'es',
+                $M: dateEnd.getMonth(),
+                $W: dateEnd.getDay(),
+                $d: dateStart,
+                $m: dateEnd.getMinutes(),
+                $ms: dateEnd.getMilliseconds(),
+                $s: dateEnd.getSeconds(),
+                $u: undefined,
+                $x: {},
+                $y: dateEnd.getFullYear()
+              };
+              setEndDateBar(objDateEnd);
+              // setEndDateBar('2023-03-31T22:00:00.000Z');
               newRowsGasolineras.push([res.data[i]["MES_Y_ANIO"], res.data[i]["PRECIO_MEDIO_GASOLINA95_E5"], res.data[i]["PRECIO_MEDIO_GASOLINA98_E5"], res.data[i]["PRECIO_GASOLEO_A"], res.data[i]["PRECIO_GASOLEO_B"], res.data[i]["PRECIO_GASOLEO_PREMIUM"]])
             }
             setRowsBarGraph(newRowsGasolineras)
@@ -188,8 +220,11 @@ export default function Diario() {
 
 
   const maxSelectableDate = dayjs().startOf('month');
+
   const handleStartDateChangeBar = (newDate) => {
     // Establecer la nueva fecha de inicio y validar que sea anterior a la fecha de finalización
+    console.log(newDate)
+
     setStartDateBar(newDate);
     if (endDateBar && newDate > endDateBar) {
       setEndDateBar(newDate);
@@ -223,7 +258,10 @@ export default function Diario() {
   const handleFiltrarBar = () => {
     // console.log(provinciaBarList)
     console.log("********")
+    console.log(provinciaBar)
+    console.log(rotulosBar)
     console.log(startDateBar)
+    console.log(endDateBar)
     // console.log(endDateBar)
     console.log("********")
     if (provinciaBar != "" && rotulosBar != "" && startDateBar != null && endDateBar != null) {
@@ -238,23 +276,23 @@ export default function Diario() {
           startDate: startDateBar["$d"],
           endDate: endDateBar["$d"]
         })
-        .then(function (res) {
-          console.log(res.data);
-          const newRowsGasolineras = [];
-          // Aquí iteramos a través de res
-          for (let i = 0; i < res.data.length; i++) {
-            console.log("************")
-            console.log(i)
-            console.log(res.data[i]["MES_Y_ANIO"])
-            newRowsGasolineras.push([res.data[i]["MES_Y_ANIO"], res.data[i]["PRECIO_MEDIO_GASOLINA95_E5"], res.data[i]["PRECIO_MEDIO_GASOLINA98_E5"], res.data[i]["PRECIO_GASOLEO_A"], res.data[i]["PRECIO_GASOLEO_B"], res.data[i]["PRECIO_GASOLEO_PREMIUM"]])
-          }
-          setRowsBarGraph(newRowsGasolineras)
-          console.log("A ver que pasa")
-          console.log(newRowsGasolineras)
-          console.log("Esto paso")
+          .then(function (res) {
+            console.log(res.data);
+            const newRowsGasolineras = [];
+            // Aquí iteramos a través de res
+            for (let i = 0; i < res.data.length; i++) {
+              console.log("************")
+              console.log(i)
+              console.log(res.data[i]["MES_Y_ANIO"])
+              newRowsGasolineras.push([res.data[i]["MES_Y_ANIO"], res.data[i]["PRECIO_MEDIO_GASOLINA95_E5"], res.data[i]["PRECIO_MEDIO_GASOLINA98_E5"], res.data[i]["PRECIO_GASOLEO_A"], res.data[i]["PRECIO_GASOLEO_B"], res.data[i]["PRECIO_GASOLEO_PREMIUM"]])
+            }
+            setRowsBarGraph(newRowsGasolineras)
+            console.log("A ver que pasa")
+            console.log(newRowsGasolineras)
+            console.log("Esto paso")
 
 
-        })
+          })
           .catch(function (error) {
             console.log(error);
           });
