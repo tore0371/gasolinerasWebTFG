@@ -12,7 +12,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from "react-router-dom";
 
 
-const pages = ['Inicio', 'Graficas', 'Mapa', 'Previsiones', 'Resaltados', 'Actual'];
+const pages = ['Inicio', 'Graficas', 'Mapa', 'Resaltados', 'Actual'];
 
 function ResponsiveAppBar() {
   let navigate = useNavigate();

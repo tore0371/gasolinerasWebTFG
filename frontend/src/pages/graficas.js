@@ -120,59 +120,29 @@ export default function Diario() {
   // cargar datos graph graph
   useEffect(() => {
     async function fetchBarData() {
+      const dateStart = new Date('2022-12-01T00:00:00');
+      const dateEnd = new Date('2023-03-01T00:00:00');
+      setStartDateBar(dateStart);
+      setEndDateBar(dateEnd);
 
-      if (provinciaBar == "" || rotulosBar == "" || startDateBar == null || endDateBar == null) {
+      axios.post('http://localhost:3002/graficas/getBarData', {
+        provincia: "CASTELLÓN",
+        rotulosBar: "CEPSA",
+        startDate: dateStart,
+        endDate: dateEnd
+      })
+        .then(function (res) {
+          const newRowsGasolineras = [];
+          // Aquí iteramos a través de res
+          for (let i = 0; i < res.data.length; i++) {
 
-        axios.post('http://localhost:3002/graficas/getBarData', {
-          provincia: "CASTELLÓN",
-          rotulosBar: "CEPSA",
-          startDate: '2022-12-31T23:00:00.000Z',
-          endDate: '2023-03-31T22:00:00.000Z'
+            newRowsGasolineras.push([res.data[i]["MES_Y_ANIO"], res.data[i]["PRECIO_MEDIO_GASOLINA95_E5"], res.data[i]["PRECIO_MEDIO_GASOLINA98_E5"], res.data[i]["PRECIO_GASOLEO_A"], res.data[i]["PRECIO_GASOLEO_B"], res.data[i]["PRECIO_GASOLEO_PREMIUM"]])
+          }
+          setRowsBarGraph(newRowsGasolineras)
         })
-          .then(function (res) {
-            const newRowsGasolineras = [];
-            // Aquí iteramos a través de res
-            for (let i = 0; i < res.data.length; i++) {
-              const dateStart = new Date('2022-12-31T00:00:00');
-              const objDateStart = {
-                $D: dateStart.getDate(),
-                $H: dateStart.getHours(),
-                $L: 'es',
-                $M: dateStart.getMonth(),
-                $W: dateStart.getDay(),
-                $d: dateStart,
-                $m: dateStart.getMinutes(),
-                $ms: dateStart.getMilliseconds(),
-                $s: dateStart.getSeconds(),
-                $u: undefined,
-                $x: {},
-                $y: dateStart.getFullYear()
-              };
-              setStartDateBar(dateStart);
+        .catch(function (error) {
+        });
 
-              const dateEnd = new Date('2022-12-31T00:00:00');
-              const objDateEnd = {
-                $D: dateEnd.getDate(),
-                $H: dateEnd.getHours(),
-                $L: 'es',
-                $M: dateEnd.getMonth(),
-                $W: dateEnd.getDay(),
-                $d: dateStart,
-                $m: dateEnd.getMinutes(),
-                $ms: dateEnd.getMilliseconds(),
-                $s: dateEnd.getSeconds(),
-                $u: undefined,
-                $x: {},
-                $y: dateEnd.getFullYear()
-              };
-              setEndDateBar(dateEnd);
-              newRowsGasolineras.push([res.data[i]["MES_Y_ANIO"], res.data[i]["PRECIO_MEDIO_GASOLINA95_E5"], res.data[i]["PRECIO_MEDIO_GASOLINA98_E5"], res.data[i]["PRECIO_GASOLEO_A"], res.data[i]["PRECIO_GASOLEO_B"], res.data[i]["PRECIO_GASOLEO_PREMIUM"]])
-            }
-            setRowsBarGraph(newRowsGasolineras)
-          })
-          .catch(function (error) {
-          });
-      }
     }
     fetchBarData();
   }, [])
@@ -180,42 +150,35 @@ export default function Diario() {
   //cargar datos line graph
   useEffect(() => {
     async function fetchLineData() {
-              const dateStart = new Date('2022-12-17T00:00:00');
-              setStartDateLine(dateStart);
+      const dateStart = new Date('2022-12-17T00:00:00');
+      setStartDateLine(dateStart);
 
-              const dateEnd = new Date('2023-03-17T00:00:00');
-              setEndDateLine(dateEnd);
-              axios.post('http://localhost:3002/graficas/getLineData', {
-                provincia: "CASTELLÓN",
-                rotulosBar: "CEPSA",
-                startDate: dateStart,
-                endDate: dateEnd
-              })
-                .then(function (res) {
-                  const newRowsGasolineras = [];
+      const dateEnd = new Date('2023-03-17T00:00:00');
+      setEndDateLine(dateEnd);
 
-                  console.log("A VER QUE ESTA PASANDO")
-                  console.log(res.data)
-                  console.log("A VER QUE HA DEJADO DE PASAR")
+      axios.post('http://localhost:3002/graficas/getLineData', {
+        provincia: "CASTELLÓN",
+        rotulosBar: "CEPSA",
+        startDate: dateStart,
+        endDate: dateEnd
+      })
+        .then(function (res) {
+          const newRowsGasolineras = [];
+          // Aquí iteramos a través de res
+          for (let i = 0; i < res.data.length; i++) {
+            newRowsGasolineras.push([res.data[i]["FECHA_FORMATO"], res.data[i]["PRECIO_MEDIO_GASOLINA95_E5"], res.data[i]["PRECIO_MEDIO_GASOLINA98_E5"], res.data[i]["PRECIO_GASOLEO_A"], res.data[i]["PRECIO_GASOLEO_B"], res.data[i]["PRECIO_GASOLEO_PREMIUM"]])
+          }
+          setRowsLineGraph(newRowsGasolineras)
+        })
+        .catch(function (error) {
+          console.log("ERROR PETICION -> " + error)
+        });
 
-                  // Aquí iteramos a través de res
-                  for (let i = 0; i < res.data.length; i++) {
-                    newRowsGasolineras.push([res.data[i]["FECHA_FORMATO"], res.data[i]["PRECIO_MEDIO_GASOLINA95_E5"], res.data[i]["PRECIO_MEDIO_GASOLINA98_E5"], res.data[i]["PRECIO_GASOLEO_A"], res.data[i]["PRECIO_GASOLEO_B"], res.data[i]["PRECIO_GASOLEO_PREMIUM"]])
-                  }
-                  console.log(newRowsGasolineras)
-                  
-    
-                  setRowsLineGraph(newRowsGasolineras)
-                })
-                .catch(function (error) {
-                  console.log("ERROR PETICION -> " + error)
-                });
-  
 
     }
     fetchLineData();
   }, []);
-  
+
 
 
 
@@ -253,9 +216,9 @@ export default function Diario() {
   const handleStartDateChangeBar = (newDate) => {
     // Establecer la nueva fecha de inicio y validar que sea anterior a la fecha de finalización
 
-    setStartDateBar(newDate);
+    setStartDateBar(newDate["$d"]);
     if (endDateBar && newDate > endDateBar) {
-      setEndDateBar(newDate);
+      setEndDateBar(newDate["$d"]);
     }
   };
 
@@ -271,9 +234,9 @@ export default function Diario() {
 
   const handleEndDateChangeBar = (newDate) => {
     // Establecer la nueva fecha de finalización y validar que sea posterior a la fecha de inicio
-    setEndDateBar(newDate);
+    setEndDateBar(newDate["$d"]);
     if (startDateBar && newDate < startDateBar) {
-      setEndDateBar(newDate);
+      setEndDateBar(newDate["$d"]);
     }
   };
 
@@ -316,6 +279,10 @@ export default function Diario() {
   }
 
   const handleFiltrarBar = () => {
+    console.log(provinciaBar)
+    console.log(rotulosBar)
+    console.log(startDateBar)
+    console.log(endDateBar)
     if (provinciaBar != "" && rotulosBar != "" && startDateBar != null && endDateBar != null) {
       //aqui realizamos la accion
       setOpenBar(false);
@@ -325,8 +292,8 @@ export default function Diario() {
         axios.post('http://localhost:3002/graficas/getBarData', {
           provincia: provinciaBar,
           rotulosBar: rotulosBar,
-          startDate: startDateBar["$d"],
-          endDate: endDateBar["$d"]
+          startDate: startDateBar,
+          endDate: endDateBar
         })
           .then(function (res) {
             const newRowsGasolineras = [];
@@ -373,7 +340,7 @@ export default function Diario() {
               newRowsGasolineras.push([res.data[i]["FECHA_FORMATO"], res.data[i]["PRECIO_MEDIO_GASOLINA95_E5"], res.data[i]["PRECIO_MEDIO_GASOLINA98_E5"], res.data[i]["PRECIO_GASOLEO_A"], res.data[i]["PRECIO_GASOLEO_B"], res.data[i]["PRECIO_GASOLEO_PREMIUM"]])
             }
             console.log(newRowsGasolineras)
-            
+
 
             setRowsLineGraph(newRowsGasolineras)
           })
@@ -382,10 +349,10 @@ export default function Diario() {
           });
 
 
-}
-fetchLineData();
+      }
+      fetchLineData();
 
-    }else{
+    } else {
       setOpenLine(true)
       console.log("hola 2")
 
@@ -442,7 +409,7 @@ fetchLineData();
               sx={{ marginTop: '3%' }}
               disableFuture
               views={['year', 'month']}
-              defaultValue={dayjs('2022-12-17')}
+              defaultValue={dayjs('2022-12-01')}
               // value={startDateBar}
 
               onChange={handleStartDateChangeBar}
@@ -459,7 +426,7 @@ fetchLineData();
               sx={{ marginTop: '3%' }}
               disableFuture
               views={['year', 'month']}
-              defaultValue={dayjs('2023-03-17')}
+              defaultValue={dayjs('2023-03-01')}
               onChange={handleEndDateChangeBar}
               minDate={minSelectableDate}
               maxDate={maxSelectableDate}
@@ -583,7 +550,7 @@ fetchLineData();
         </Collapse>
       </Box>
 
-      <LineGraph rows={rowsLineGraph}/>
+      <LineGraph rows={rowsLineGraph} />
 
       <Typography
         sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "1%", fontWeight: "bold", fontSize: "180%" }}>
