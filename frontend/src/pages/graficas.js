@@ -46,6 +46,7 @@ export default function Diario() {
 
   dayjs.locale('es')
   const [openBar, setOpenBar] = React.useState(false);
+  const [openLine, setOpenLine] = React.useState(false);
 
 
   const [listaProvincias, setListaProvincias] = useState([])
@@ -60,17 +61,16 @@ export default function Diario() {
 
 
 
+  const [rotulosLineList, setRotulosLineList] = useState([]);
 
-  const [provinciaLine, setProvinciaLine] = useState("");
-  const [rotulosLine, setRotulosLine] = useState([]);
+  const [provinciaLine, setProvinciaLine] = useState("CASTELLÓN");
+  const [rotulosLine, setRotulosLine] = useState("CEPSA");
   const [startDateLine, setStartDateLine] = useState(null);
   const [endDateLine, setEndDateLine] = useState(null);
 
 
   const [provinciaPie, setProvinciaPie] = useState("CASTELLÓN"); // valor por defecto
-  const [rotulosPie, setRotulosPie] = useState([]);
-  const [startDatePie, setStartDatePie] = useState(null);
-  const [endDatePie, setEndDatePie] = useState(null);
+
 
 
   const [dataGraphLine, setDataGraphLine] = useState([])
@@ -84,6 +84,8 @@ export default function Diario() {
 
   const [rowsGasolineras, setRowsGasolineras] = useState([])
   const [rowsBarGraph, setRowsBarGraph] = useState([])
+  const [rowsLineGraph, setRowsLineGraph] = useState([])
+
 
 
 
@@ -115,16 +117,11 @@ export default function Diario() {
     fetchPieData();
   }, [provinciaPie]);
 
-
+  // cargar datos graph graph
   useEffect(() => {
     async function fetchBarData() {
-      console.log(provinciaBar)
-      console.log(rotulosBar)
-      console.log(startDateBar)
-      console.log(endDateBar)
 
       if (provinciaBar == "" || rotulosBar == "" || startDateBar == null || endDateBar == null) {
-        console.log("+")
 
         axios.post('http://localhost:3002/graficas/getBarData', {
           provincia: "CASTELLÓN",
@@ -133,13 +130,9 @@ export default function Diario() {
           endDate: '2023-03-31T22:00:00.000Z'
         })
           .then(function (res) {
-            console.log(res.data);
             const newRowsGasolineras = [];
             // Aquí iteramos a través de res
             for (let i = 0; i < res.data.length; i++) {
-              console.log("************")
-              console.log(i)
-              console.log(res.data[i]["MES_Y_ANIO"])
               const dateStart = new Date('2022-12-31T00:00:00');
               const objDateStart = {
                 $D: dateStart.getDate(),
@@ -155,7 +148,7 @@ export default function Diario() {
                 $x: {},
                 $y: dateStart.getFullYear()
               };
-              setStartDateBar(objDateStart);
+              setStartDateBar(dateStart);
 
               const dateEnd = new Date('2022-12-31T00:00:00');
               const objDateEnd = {
@@ -172,27 +165,57 @@ export default function Diario() {
                 $x: {},
                 $y: dateEnd.getFullYear()
               };
-              setEndDateBar(objDateEnd);
-              // setEndDateBar('2023-03-31T22:00:00.000Z');
+              setEndDateBar(dateEnd);
               newRowsGasolineras.push([res.data[i]["MES_Y_ANIO"], res.data[i]["PRECIO_MEDIO_GASOLINA95_E5"], res.data[i]["PRECIO_MEDIO_GASOLINA98_E5"], res.data[i]["PRECIO_GASOLEO_A"], res.data[i]["PRECIO_GASOLEO_B"], res.data[i]["PRECIO_GASOLEO_PREMIUM"]])
             }
             setRowsBarGraph(newRowsGasolineras)
-            console.log("A ver que pasa")
-            console.log(newRowsGasolineras)
-            console.log("Esto paso")
-
-
           })
           .catch(function (error) {
-            console.log(error);
           });
       }
     }
     fetchBarData();
   }, [])
 
+  //cargar datos line graph
+  useEffect(() => {
+    async function fetchLineData() {
+              const dateStart = new Date('2022-12-17T00:00:00');
+              setStartDateLine(dateStart);
 
+              const dateEnd = new Date('2023-03-17T00:00:00');
+              setEndDateLine(dateEnd);
+              axios.post('http://localhost:3002/graficas/getLineData', {
+                provincia: "CASTELLÓN",
+                rotulosBar: "CEPSA",
+                startDate: dateStart,
+                endDate: dateEnd
+              })
+                .then(function (res) {
+                  const newRowsGasolineras = [];
 
+                  console.log("A VER QUE ESTA PASANDO")
+                  console.log(res.data)
+                  console.log("A VER QUE HA DEJADO DE PASAR")
+
+                  // Aquí iteramos a través de res
+                  for (let i = 0; i < res.data.length; i++) {
+                    newRowsGasolineras.push([res.data[i]["FECHA_FORMATO"], res.data[i]["PRECIO_MEDIO_GASOLINA95_E5"], res.data[i]["PRECIO_MEDIO_GASOLINA98_E5"], res.data[i]["PRECIO_GASOLEO_A"], res.data[i]["PRECIO_GASOLEO_B"], res.data[i]["PRECIO_GASOLEO_PREMIUM"]])
+                  }
+                  console.log(newRowsGasolineras)
+                  
+    
+                  setRowsLineGraph(newRowsGasolineras)
+                })
+                .catch(function (error) {
+                  console.log("ERROR PETICION -> " + error)
+                });
+  
+
+    }
+    fetchLineData();
+  }, []);
+  
 
 
 
@@ -216,6 +239,12 @@ export default function Diario() {
   }
 
 
+  async function getRotulosFunctLine(provincia) {
+    const rotulosArrayLine = await getRotulos(provincia);
+    setRotulosLineList(rotulosArrayLine);
+  }
+
+
   const minSelectableDate = dayjs("2022-12-01");
 
 
@@ -223,11 +252,20 @@ export default function Diario() {
 
   const handleStartDateChangeBar = (newDate) => {
     // Establecer la nueva fecha de inicio y validar que sea anterior a la fecha de finalización
-    console.log(newDate)
 
     setStartDateBar(newDate);
     if (endDateBar && newDate > endDateBar) {
       setEndDateBar(newDate);
+    }
+  };
+
+
+  const handleStartDateChangeLine = (newDate) => {
+    // Establecer la nueva fecha de inicio y validar que sea anterior a la fecha de finalización
+
+    setStartDateLine(newDate["$d"]);
+    if (endDateLine && newDate > endDateLine) {
+      setEndDateLine(newDate["$d"]);
     }
   };
 
@@ -240,6 +278,15 @@ export default function Diario() {
   };
 
 
+  const handleEndDateChangeLine = (newDate) => {
+    // Establecer la nueva fecha de finalización y validar que sea posterior a la fecha de inicio
+    setEndDateLine(newDate["$d"]);
+    if (startDateLine && newDate < startDateLine) {
+      setEndDateLine(newDate["$d"]);
+    }
+  };
+
+
 
   const handleChangeProvinciaBar = (provincia) => {
     setProvinciaBar(provincia);
@@ -247,23 +294,28 @@ export default function Diario() {
     setRotulosBar("")
   }
 
+  const handleChangeProvinciaLine = (provincia) => {
+    setProvinciaLine(provincia);
+    getRotulosFunctLine(provincia);
+    setRotulosLine("")
+  }
+
   const handleChangeRotuloBar = (rotulo) => {
     setRotulosBar(rotulo);
   }
+
+  const handleChangeRotuloLine = (rotulo) => {
+    setRotulosLine(rotulo);
+  }
+
+
+
 
   const handleChangeProvinciaPie = (provincia) => {
     setProvinciaPie(provincia);
   }
 
   const handleFiltrarBar = () => {
-    // console.log(provinciaBarList)
-    console.log("********")
-    console.log(provinciaBar)
-    console.log(rotulosBar)
-    console.log(startDateBar)
-    console.log(endDateBar)
-    // console.log(endDateBar)
-    console.log("********")
     if (provinciaBar != "" && rotulosBar != "" && startDateBar != null && endDateBar != null) {
       //aqui realizamos la accion
       setOpenBar(false);
@@ -277,24 +329,14 @@ export default function Diario() {
           endDate: endDateBar["$d"]
         })
           .then(function (res) {
-            console.log(res.data);
             const newRowsGasolineras = [];
             // Aquí iteramos a través de res
             for (let i = 0; i < res.data.length; i++) {
-              console.log("************")
-              console.log(i)
-              console.log(res.data[i]["MES_Y_ANIO"])
               newRowsGasolineras.push([res.data[i]["MES_Y_ANIO"], res.data[i]["PRECIO_MEDIO_GASOLINA95_E5"], res.data[i]["PRECIO_MEDIO_GASOLINA98_E5"], res.data[i]["PRECIO_GASOLEO_A"], res.data[i]["PRECIO_GASOLEO_B"], res.data[i]["PRECIO_GASOLEO_PREMIUM"]])
             }
             setRowsBarGraph(newRowsGasolineras)
-            console.log("A ver que pasa")
-            console.log(newRowsGasolineras)
-            console.log("Esto paso")
-
-
           })
           .catch(function (error) {
-            console.log(error);
           });
 
       }
@@ -302,8 +344,54 @@ export default function Diario() {
     } else {
       //sacamos error
       setOpenBar(true);
-      console.log("error")
     }
+  }
+
+  const handleFiltrarLine = () => {
+    console.log(provinciaLine)
+    console.log(rotulosLine)
+    console.log(startDateLine)
+    console.log(endDateLine)
+    if (provinciaLine != "" && rotulosLine != "" && startDateLine != null && endDateLine != null) {
+      console.log("hola 1")
+      async function fetchLineData() {
+        axios.post('http://localhost:3002/graficas/getLineData', {
+          provincia: provinciaLine,
+          rotulosBar: rotulosLine,
+          startDate: startDateLine,
+          endDate: endDateLine
+        })
+          .then(function (res) {
+            const newRowsGasolineras = [];
+
+            console.log("A VER QUE ESTA PASANDO")
+            console.log(res.data)
+            console.log("A VER QUE HA DEJADO DE PASAR")
+
+            // Aquí iteramos a través de res
+            for (let i = 0; i < res.data.length; i++) {
+              newRowsGasolineras.push([res.data[i]["FECHA_FORMATO"], res.data[i]["PRECIO_MEDIO_GASOLINA95_E5"], res.data[i]["PRECIO_MEDIO_GASOLINA98_E5"], res.data[i]["PRECIO_GASOLEO_A"], res.data[i]["PRECIO_GASOLEO_B"], res.data[i]["PRECIO_GASOLEO_PREMIUM"]])
+            }
+            console.log(newRowsGasolineras)
+            
+
+            setRowsLineGraph(newRowsGasolineras)
+          })
+          .catch(function (error) {
+            console.log("ERROR PETICION -> " + error)
+          });
+
+
+}
+fetchLineData();
+
+    }else{
+      setOpenLine(true)
+      console.log("hola 2")
+
+    }
+
+
   }
 
 
@@ -421,20 +509,24 @@ export default function Diario() {
             disablePortal
             id="combo-box-demo"
             options={listaProvincias}
+            value={provinciaLine} // valor inicial
             sx={{ width: 300, marginTop: '3%' }}
             renderInput={(params) => <TextField {...params} label="Provincia" />}
-            onChange={(event, value) => handleChangeProvinciaBar(value)}
+            onChange={(event, value) => handleChangeProvinciaLine(value)}
           />
         </Box>
         <Box>
           <Typography>Seleccione un rótulo</Typography>
           <Autocomplete
             disablePortal
-            disabled={!provinciaBar}
+            disabled={!provinciaLine}
             id="combo-box-demo"
-            options={rotulosBarList}
+            options={rotulosLineList}
+            value={rotulosLine}
             sx={{ width: 300, marginTop: '3%' }}
             renderInput={(params) => <TextField {...params} label="Rótulo" />}
+            onChange={(event, value) => handleChangeRotuloLine(value)}
+
           />
         </Box>
         <Box>
@@ -442,8 +534,10 @@ export default function Diario() {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               sx={{ marginTop: '3%' }}
-              value={startDateBar}
-              onChange={handleStartDateChangeBar}
+              // value={startDateBar}
+              defaultValue={dayjs('2022-12-17')}
+
+              onChange={handleStartDateChangeLine}
             />
           </LocalizationProvider>
         </Box>
@@ -452,17 +546,45 @@ export default function Diario() {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               sx={{ marginTop: '3%' }}
-              value={endDateBar}
-              onChange={handleEndDateChangeBar}
+              // value={endDateBar}
+              defaultValue={dayjs('2023-03-17')}
+
+              onChange={handleEndDateChangeLine}
             />
           </LocalizationProvider>
         </Box>
         <Box sx={{ marginTop: "1%" }}>
-          <Button variant="contained">Filtrar</Button>
+          <Button variant="contained"
+            onClick={handleFiltrarLine}>
+            Filtrar
+          </Button>
         </Box>
       </Box>
+      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", mt: "0.8%" }}>
+        <Collapse in={openLine}>
+          <Alert
+            severity="error"
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setOpenLine(false);
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
+            sx={{ mb: 2 }}
+          >
+            Es obligatorio rellenar todos los campos
+          </Alert>
+        </Collapse>
+      </Box>
 
-      <LineGraph />
+      <LineGraph rows={rowsLineGraph}/>
+
       <Typography
         sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "1%", fontWeight: "bold", fontSize: "180%" }}>
         Número de estaciones por provincia

@@ -6,28 +6,57 @@ import { Line } from 'react-chartjs-2'
 import Box from '@mui/material/Box';
 
 
-const data = {
-    labels: ['Estados Unidos', 'Mexico', 'Italia', 'Colombia', 'España'],
+
+
+export default function barGraph({rows}) {
+
+  const data = {
+    labels: rows.map((row) => (row[0])),
     datasets: [
-        {
-            label: 'Precio(L/€) ',
-            data: [65, 59, 80, 81, 56, 55, 40],
-            fill: false,
-            borderColor: '#1976d2',
-            tension: 0.1
-          },
+      {
+        label: 'Gasolina 95',
+        data: rows.map((row) => (row[1])),
+        fill: false,
+        borderColor: 'rgb(0, 0, 139)',
+        tension: 0.1
+      },
+      {
+        label: 'Gasolina 98',
+        data: rows.map((row) => (row[2])),
+        fill: false,
+        borderColor: 'rgb(25, 25, 172)',
+        tension: 0.1
+      }, {
+        label: 'Gasoleo A',
+        data: rows.map((row) => (row[3])),
+        fill: false,
+        borderColor: 'rgb(65, 105, 225)',
+        tension: 0.1
+      }, {
+        label: 'Gasoleo B',
+        data: rows.map((row) => (row[4])),
+        fill: false,
+        borderColor: 'rgb(70, 130, 180)',
+        tension: 0.1
+      }, {
+        label: 'Gasoleo Premium',
+        data: rows.map((row) => (row[5])),
+        fill: false,
+        borderColor: 'rgb(135, 206, 235)',
+        tension: 0.1
+      },
     ]
   };
-
+  
   const opciones = {
     maintainAspectRatio: false,
     responsive: true
   }
+  console.log(rows.map((row) => (row[4])))
 
-export default function barGraph(){
-    return(
-      <Box sx={{ height: "500px", width: "90%", marginBottom: "20px", marginTop: "2%", marginLeft: "5%", marginRight: "5%" }}>
-        <Line data={data} options={opciones} />
-      </Box>
-    );
+  return (
+    <Box sx={{ height: "500px", width: "90%", marginBottom: "20px", marginTop: "2%", marginLeft: "5%", marginRight: "5%" }}>
+      <Line data={data} options={opciones} />
+    </Box>
+  );
 }

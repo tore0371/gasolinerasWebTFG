@@ -657,6 +657,33 @@ const getPricesBarGraph = async function (provincia, rotulo, firstDateSQL, lastD
     return data[0]
 }
 
+
+const getPricesLineGraph = async function (provincia, rotulo, firstDateSQL, lastDateSQL) {
+    var data = await sequelize.query(
+        "SELECT \
+        CONVERT(VARCHAR(10), FECHA, 111) AS FECHA_FORMATO,\
+        ROUND(AVG(PRECIO_GASOLINA_95_E5), 2) AS PRECIO_MEDIO_GASOLINA95_E5,\
+        ROUND(AVG(PRECIO_GASOLINA_98_E5), 2) AS PRECIO_MEDIO_GASOLINA98_E5,\
+        ROUND(AVG(PRECIO_GASOLEO_A), 2) AS PRECIO_GASOLEO_A,\
+        ROUND(AVG(PRECIO_GASOLEO_B), 2) AS PRECIO_GASOLEO_B,\
+        ROUND(AVG(PRECIO_GASOLEO_PREMIUM), 2) AS PRECIO_GASOLEO_PREMIUM\
+    FROM \
+        GASOLINERAS\
+        INNER JOIN DATA_GASOLINERAS ON GASOLINERAS.ID_GASOLINERA = DATA_GASOLINERAS.ID_GASOLINERA\
+    WHERE  \
+        GASOLINERAS.PROVINCIA LIKE '%" + provincia + "%' AND \
+        GASOLINERAS.ROTULO LIKE '%" + rotulo + "%' AND \
+        FECHA >= '" + firstDateSQL + "' AND \
+        FECHA <= '" + lastDateSQL + "' \
+    GROUP BY CONVERT(VARCHAR(10), FECHA, 111)\
+    ORDER BY CONVERT(VARCHAR(10), FECHA, 111) ASC"
+    )
+    return data[0]
+}
+
+
+
+
 export {
     getAllGasolineras,
     getTodayData,
@@ -686,5 +713,6 @@ export {
     getRotulos,
     getProvincias,
     getNumGasolinerasGraph,
-    getPricesBarGraph
+    getPricesBarGraph,
+    getPricesLineGraph
 }

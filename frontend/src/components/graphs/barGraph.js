@@ -8,10 +8,6 @@ import Box from '@mui/material/Box';
 
 
 export default function BarGraph({rows}){
-  console.log("Estoy en la grafifca")
-  console.log(rows)
-  console.log("Estoy en la grafifca")
-
   const data = {
     labels: rows.map((row) => (row[0])),
     datasets: [
