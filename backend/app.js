@@ -7,8 +7,7 @@ import resaltadosRoute from './routes/resaltados.route.js'
 import graficasRoute from './routes/graficas.route.js'
 import cors from 'cors';
 
-const app = express();
-
+let app = express(); // Sensitive
 app.use(express.json());
 
 
